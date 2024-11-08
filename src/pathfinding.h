@@ -22,8 +22,8 @@ namespace pathfinding
 		typedef std::pair<priority_t, T> PQElement;
 		std::priority_queue<PQElement, std::vector<PQElement>, std::greater<PQElement>> elements;
 
-		inline bool empty() const { return elements.empty(); }
-		inline void put(T item, priority_t priority) { elements.emplace(priority, item); }
+		bool empty() const { return elements.empty(); }
+		void put(T item, priority_t priority) { elements.emplace(priority, item); }
 
 		T get()
 		{
@@ -39,7 +39,7 @@ namespace pathfinding
 	}
 
 	template <typename Location, typename Graph>
-	void a_star_search(Graph graph, Location start, Location goal,
+	void a_star_search(Graph graph, Location start, Location target,
 	                   std::unordered_map<Location, Location>& came_from,
 	                   std::unordered_map<Location, double>& cost_so_far)
 	{
@@ -52,7 +52,7 @@ namespace pathfinding
 		{
 			Location current = frontier.get();
 
-			if (current == goal) break;
+			if (current == target) break;
 
 			for (Location next : graph.neighbors(current))
 			{
@@ -61,7 +61,7 @@ namespace pathfinding
 				if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
 				{
 					cost_so_far[next] = new_cost;
-					double priority = new_cost + heuristic(next, goal);
+					double priority = new_cost + heuristic(next, target);
 					frontier.put(next, priority);
 					came_from[next] = current;
 				}
@@ -70,14 +70,15 @@ namespace pathfinding
 	}
 
 	template <typename Location>
-	std::vector<Location> reconstruct_path(Location start, Location goal,
+	std::vector<Location> reconstruct_path(Location start, Location target,
 	                                       std::unordered_map<Location, Location> came_from)
 	{
 		std::vector<Location> path;
-		Location current = goal;
+		Location current = target;
 
-		// No path found.
-		if (came_from.find(goal) == came_from.end())
+		const bool no_path_found{came_from.find(target) == came_from.end()};
+
+		if (no_path_found)
 		{
 			return path;
 		}

@@ -17,7 +17,7 @@ namespace pathfinding
 				   std::unordered_map<GridLocation, GridLocation>* point_to = nullptr,
 				   std::vector<GridLocation>* path = nullptr,
 				   GridLocation* start = nullptr,
-				   GridLocation* goal = nullptr)
+				   GridLocation* target = nullptr)
 	{
 		const int field_width = 3;
 		std::cout << std::string(field_width * graph.width, '_') << '\n';
@@ -28,7 +28,7 @@ namespace pathfinding
 			{
 				GridLocation id{x, y};
 
-				if (graph.walls.find(id) != graph.walls.end())
+				if (graph.impassable.find(id) != graph.impassable.end())
 				{
 					std::cout << std::string(field_width, '#');
 				}
@@ -36,7 +36,7 @@ namespace pathfinding
 				{
 					std::cout << " A ";
 				}
-				else if (goal && id == *goal)
+				else if (target && id == *target)
 				{
 					std::cout << " Z ";
 				}

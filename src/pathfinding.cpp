@@ -21,7 +21,7 @@ namespace pathfinding
 
 				if (map_value == 0)
 				{
-					grid.walls.insert(GridLocation{column, row});
+					grid.impassable.insert(GridLocation{column, row});
 				}
 			}
 		}
@@ -30,19 +30,19 @@ namespace pathfinding
 		std::unordered_map<GridLocation, double> cost_so_far;
 
 		GridLocation start{Start.first, Start.second};
-		GridLocation goal{Target.first, Target.second};
+		GridLocation target{Target.first, Target.second};
 
-		a_star_search(grid, start, goal, came_from, cost_so_far);
+		a_star_search(grid, start, target, came_from, cost_so_far);
 
-		std::vector<GridLocation> path = reconstruct_path(start, goal, came_from);
+		std::vector<GridLocation> path = reconstruct_path(start, target, came_from);
 
-		draw_grid(grid, nullptr, &came_from, nullptr, &start, &goal);
+		draw_grid(grid, nullptr, &came_from, nullptr, &start, &target);
 		std::cout << '\n';
 
-		draw_grid(grid, nullptr, nullptr, &path, &start, &goal);
+		draw_grid(grid, nullptr, nullptr, &path, &start, &target);
 		std::cout << '\n';
 
-		draw_grid(grid, &cost_so_far, nullptr, nullptr, &start, &goal);
+		draw_grid(grid, &cost_so_far, nullptr, nullptr, &start, &target);
 
 		for (auto& location : path)
 		{

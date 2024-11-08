@@ -9,7 +9,7 @@ namespace pathfinding
 		{
 			for (int y = y1; y < y2; ++y)
 			{
-				grid.walls.insert(GridLocation{x, y});
+				grid.impassable.insert(GridLocation{x, y});
 			}
 		}
 	}

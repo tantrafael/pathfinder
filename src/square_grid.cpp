@@ -6,7 +6,7 @@ namespace pathfinding
 {
 	bool operator ==(GridLocation a, GridLocation b)
 	{
-		return a.x == b.x && a.y == b.y;
+		return (a.x == b.x) && (a.y == b.y);
 	}
 
 	bool operator !=(GridLocation a, GridLocation b)
@@ -19,34 +19,34 @@ namespace pathfinding
 		return std::tie(a.x, a.y) < std::tie(b.x, b.y);
 	}
 
-	std::array<GridLocation, 4> SquareGrid::DIRS = {
+	std::array<GridLocation, 4> SquareGrid::GridDirections = {
 		GridLocation{1, 0}, GridLocation{-1, 0},
 		GridLocation{0, -1}, GridLocation{0, 1}
 	};
 
-	SquareGrid::SquareGrid(int width_, int height_) : width(width_), height(height_)
+	SquareGrid::SquareGrid(int width, int height) : width(width), height(height)
 	{
 	}
 
-	bool SquareGrid::in_bounds(GridLocation id) const
+	bool SquareGrid::within_bounds(GridLocation id) const
 	{
-		return 0 <= id.x && id.x < width && 0 <= id.y && id.y < height;
+		return (0 <= id.x) && (id.x < width) && (0 <= id.y) && (id.y < height);
 	}
 
 	bool SquareGrid::passable(GridLocation id) const
 	{
-		return walls.find(id) == walls.end();
+		return impassable.find(id) == impassable.end();
 	}
 
 	std::vector<GridLocation> SquareGrid::neighbors(GridLocation id) const
 	{
 		std::vector<GridLocation> results;
 
-		for (GridLocation dir : DIRS)
+		for (GridLocation grid_direction : GridDirections)
 		{
-			GridLocation next{id.x + dir.x, id.y + dir.y};
+			GridLocation next{id.x + grid_direction.x, id.y + grid_direction.y};
 
-			if (in_bounds(next) && passable(next))
+			if (within_bounds(next) && passable(next))
 			{
 				results.push_back(next);
 			}

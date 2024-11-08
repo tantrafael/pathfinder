@@ -32,12 +32,12 @@ namespace pathfinding
 
 	struct SquareGrid
 	{
-		static std::array<GridLocation, 4> DIRS;
+		static std::array<GridLocation, 4> GridDirections;
 		int width, height;
-		std::unordered_set<GridLocation> walls;
+		std::unordered_set<GridLocation> impassable;
 
-		SquareGrid(int width_, int height_);
-		bool in_bounds(GridLocation id) const;
+		SquareGrid(int width, int height);
+		bool within_bounds(GridLocation id) const;
 		bool passable(GridLocation id) const;
 		std::vector<GridLocation> neighbors(GridLocation id) const;
 		double cost(GridLocation from_node, GridLocation to_node) const;
