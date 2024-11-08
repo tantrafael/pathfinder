@@ -4,60 +4,68 @@
 #include <unordered_map>
 #include <vector>
 #include <iomanip>
-#include "square_grid.h" // Includes GridLocation
 
-// This function outputs a grid. Pass in optional parameters to print
-// the distances, point_to directions, or a path.
-template <class Graph>
-void draw_grid(const Graph& graph,
-               std::unordered_map<GridLocation, double>* distances = nullptr,
-               std::unordered_map<GridLocation, GridLocation>* point_to = nullptr,
-               std::vector<GridLocation>* path = nullptr,
-               GridLocation* start = nullptr,
-               GridLocation* goal = nullptr)
+#include "square_grid.h"
+
+namespace pathfinding
 {
-	const int field_width = 3;
-	std::cout << std::string(field_width * graph.width, '_') << '\n';
-	for (int y = 0; y != graph.height; ++y)
+	// This function outputs a grid. Pass in optional parameters to print
+	// the distances, point_to directions, or a path.
+	template <class Graph>
+	void draw_grid(const Graph& graph,
+				   std::unordered_map<GridLocation, double>* distances = nullptr,
+				   std::unordered_map<GridLocation, GridLocation>* point_to = nullptr,
+				   std::vector<GridLocation>* path = nullptr,
+				   GridLocation* start = nullptr,
+				   GridLocation* goal = nullptr)
 	{
-		for (int x = 0; x != graph.width; ++x)
+		const int field_width = 3;
+		std::cout << std::string(field_width * graph.width, '_') << '\n';
+
+		for (int y = 0; y != graph.height; ++y)
 		{
-			GridLocation id{x, y};
-			if (graph.walls.find(id) != graph.walls.end())
+			for (int x = 0; x != graph.width; ++x)
 			{
-				std::cout << std::string(field_width, '#');
+				GridLocation id{x, y};
+
+				if (graph.walls.find(id) != graph.walls.end())
+				{
+					std::cout << std::string(field_width, '#');
+				}
+				else if (start && id == *start)
+				{
+					std::cout << " A ";
+				}
+				else if (goal && id == *goal)
+				{
+					std::cout << " Z ";
+				}
+				else if (path != nullptr && std::find(path->begin(), path->end(), id) != path->end())
+				{
+					std::cout << " @ ";
+				}
+				else if (point_to != nullptr && point_to->count(id))
+				{
+					GridLocation next = (*point_to)[id];
+					if (next.x == x + 1) { std::cout << " > "; }
+					else if (next.x == x - 1) { std::cout << " < "; }
+					else if (next.y == y + 1) { std::cout << " v "; }
+					else if (next.y == y - 1) { std::cout << " ^ "; }
+					else { std::cout << " * "; }
+				}
+				else if (distances != nullptr && distances->count(id))
+				{
+					std::cout << ' ' << std::left << std::setw(field_width - 1) << (*distances)[id];
+				}
+				else
+				{
+					std::cout << " . ";
+				}
 			}
-			else if (start && id == *start)
-			{
-				std::cout << " A ";
-			}
-			else if (goal && id == *goal)
-			{
-				std::cout << " Z ";
-			}
-			else if (path != nullptr && std::find(path->begin(), path->end(), id) != path->end())
-			{
-				std::cout << " @ ";
-			}
-			else if (point_to != nullptr && point_to->count(id))
-			{
-				GridLocation next = (*point_to)[id];
-				if (next.x == x + 1) { std::cout << " > "; }
-				else if (next.x == x - 1) { std::cout << " < "; }
-				else if (next.y == y + 1) { std::cout << " v "; }
-				else if (next.y == y - 1) { std::cout << " ^ "; }
-				else { std::cout << " * "; }
-			}
-			else if (distances != nullptr && distances->count(id))
-			{
-				std::cout << ' ' << std::left << std::setw(field_width - 1) << (*distances)[id];
-			}
-			else
-			{
-				std::cout << " . ";
-			}
+
+			std::cout << '\n';
 		}
-		std::cout << '\n';
+
+		std::cout << std::string(field_width * graph.width, '~') << '\n';
 	}
-	std::cout << std::string(field_width * graph.width, '~') << '\n';
 }

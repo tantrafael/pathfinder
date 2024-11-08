@@ -1,24 +1,45 @@
 #pragma once
 
-#include "Graph.h"
 #include <array>
+#include <unordered_set>
 #include <vector>
 
-struct SquareGrid
+namespace pathfinding
 {
-	static std::array<GridLocation, 4> DIRS;
-	int width, height;
-	std::unordered_set<GridLocation> walls;
+	struct GridLocation
+	{
+		int x, y;
+	};
+}
 
-	SquareGrid(int width_, int height_);
-	bool in_bounds(GridLocation id) const;
-	bool passable(GridLocation id) const;
-	std::vector<GridLocation> neighbors(GridLocation id) const;
-};
-
-struct GridWithWeights : SquareGrid
+namespace std
 {
-	std::unordered_set<GridLocation> forests;
-	GridWithWeights(int w, int h);
-	double cost(GridLocation from_node, GridLocation to_node) const;
-};
+	template <>
+	struct hash<pathfinding::GridLocation>
+	{
+		std::size_t operator()(const pathfinding::GridLocation& id) const noexcept
+		{
+			return std::hash<int>()(id.x ^ (id.y << 16));
+		}
+	};
+}
+
+namespace pathfinding
+{
+	bool operator ==(GridLocation a, GridLocation b);
+	bool operator !=(GridLocation a, GridLocation b);
+	bool operator <(GridLocation a, GridLocation b);
+
+	struct SquareGrid
+	{
+		static std::array<GridLocation, 4> DIRS;
+		int width, height;
+		std::unordered_set<GridLocation> walls;
+
+		SquareGrid(int width_, int height_);
+		bool in_bounds(GridLocation id) const;
+		bool passable(GridLocation id) const;
+		std::vector<GridLocation> neighbors(GridLocation id) const;
+		double cost(GridLocation from_node, GridLocation to_node) const;
+	};
+}

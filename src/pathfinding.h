@@ -1,10 +1,14 @@
-/*
 #pragma once
 
-#include <unordered_set>
-#include <utility>
+#include <unordered_map>
 #include <vector>
+#include <queue>
+#include <algorithm>
+#include <cmath>
 
+#include "square_grid.h"
+
+/*
 namespace Pathfinding
 {
 	bool FindPath(std::pair<int, int> Start,
@@ -30,116 +34,83 @@ namespace Pathfinding
 }
 */
 
-#pragma once
-
-#include <unordered_map>
-#include <vector>
-#include <queue>
-#include <algorithm> // For std::reverse
-#include <cmath> // For std::abs
-#include "square_grid.h" // For GridLocation
-
-// Priority queue for pathfinding
-template <typename T, typename priority_t>
-struct PriorityQueue
+namespace pathfinding
 {
-	typedef std::pair<priority_t, T> PQElement;
-	std::priority_queue<PQElement, std::vector<PQElement>, std::greater<PQElement>> elements;
-
-	inline bool empty() const { return elements.empty(); }
-	inline void put(T item, priority_t priority) { elements.emplace(priority, item); }
-
-	T get()
+	template <typename T, typename priority_t>
+	struct PriorityQueue
 	{
-		T best_item = elements.top().second;
-		elements.pop();
-		return best_item;
-	}
-};
+		typedef std::pair<priority_t, T> PQElement;
+		std::priority_queue<PQElement, std::vector<PQElement>, std::greater<PQElement>> elements;
 
-// Heuristic function for A* search
-inline double heuristic(GridLocation a, GridLocation b)
-{
-	return std::abs(a.x - b.x) + std::abs(a.y - b.y);
-}
+		inline bool empty() const { return elements.empty(); }
+		inline void put(T item, priority_t priority) { elements.emplace(priority, item); }
 
-// Dijkstra's Algorithm
-template <typename Location, typename Graph>
-void dijkstra_search(Graph graph, Location start, Location goal,
-                     std::unordered_map<Location, Location>& came_from,
-                     std::unordered_map<Location, double>& cost_so_far)
-{
-	PriorityQueue<Location, double> frontier;
-	frontier.put(start, 0);
-	came_from[start] = start;
-	cost_so_far[start] = 0;
-
-	while (!frontier.empty())
-	{
-		Location current = frontier.get();
-
-		if (current == goal) break;
-
-		for (Location next : graph.neighbors(current))
+		T get()
 		{
-			double new_cost = cost_so_far[current] + graph.cost(current, next);
-			if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
+			T best_item = elements.top().second;
+			elements.pop();
+			return best_item;
+		}
+	};
+
+	inline double heuristic(GridLocation a, GridLocation b)
+	{
+		return std::abs(a.x - b.x) + std::abs(a.y - b.y);
+	}
+
+	template <typename Location, typename Graph>
+	void a_star_search(Graph graph, Location start, Location goal,
+	                   std::unordered_map<Location, Location>& came_from,
+	                   std::unordered_map<Location, double>& cost_so_far)
+	{
+		PriorityQueue<Location, double> frontier;
+		frontier.put(start, 0);
+		came_from[start] = start;
+		cost_so_far[start] = 0;
+
+		while (!frontier.empty())
+		{
+			Location current = frontier.get();
+
+			if (current == goal) break;
+
+			for (Location next : graph.neighbors(current))
 			{
-				cost_so_far[next] = new_cost;
-				came_from[next] = current;
-				frontier.put(next, new_cost);
+				double new_cost = cost_so_far[current] + graph.cost(current, next);
+
+				if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
+				{
+					cost_so_far[next] = new_cost;
+					double priority = new_cost + heuristic(next, goal);
+					frontier.put(next, priority);
+					came_from[next] = current;
+				}
 			}
 		}
 	}
-}
 
-// A* Search Algorithm
-template <typename Location, typename Graph>
-void a_star_search(Graph graph, Location start, Location goal,
-                   std::unordered_map<Location, Location>& came_from,
-                   std::unordered_map<Location, double>& cost_so_far)
-{
-	PriorityQueue<Location, double> frontier;
-	frontier.put(start, 0);
-	came_from[start] = start;
-	cost_so_far[start] = 0;
-
-	while (!frontier.empty())
+	template <typename Location>
+	std::vector<Location> reconstruct_path(Location start, Location goal,
+	                                       std::unordered_map<Location, Location> came_from)
 	{
-		Location current = frontier.get();
+		std::vector<Location> path;
+		Location current = goal;
 
-		if (current == goal) break;
-
-		for (Location next : graph.neighbors(current))
+		// No path found.
+		if (came_from.find(goal) == came_from.end())
 		{
-			double new_cost = cost_so_far[current] + graph.cost(current, next);
-			if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
-			{
-				cost_so_far[next] = new_cost;
-				double priority = new_cost + heuristic(next, goal);
-				frontier.put(next, priority);
-				came_from[next] = current;
-			}
+			return path;
 		}
+
+		while (current != start)
+		{
+			path.push_back(current);
+			current = came_from[current];
+		}
+
+		path.push_back(start);
+		std::reverse(path.begin(), path.end());
+
+		return path;
 	}
-}
-
-// Reconstruct Path
-template <typename Location>
-std::vector<Location> reconstruct_path(Location start, Location goal,
-                                       std::unordered_map<Location, Location> came_from)
-{
-	std::vector<Location> path;
-	Location current = goal;
-
-	if (came_from.find(goal) == came_from.end()) return path; // No path found
-
-	while (current != start)
-	{
-		path.push_back(current);
-		current = came_from[current];
-	}
-	path.push_back(start);
-	std::reverse(path.begin(), path.end());
-	return path;
 }
