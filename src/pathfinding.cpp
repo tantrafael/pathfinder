@@ -1,7 +1,8 @@
-/*
 #include "pathfinding.h"
 
-namespace Pathfinding
+#include "visualization.h"
+
+namespace pathfinding
 {
 	bool FindPath(std::pair<int, int> Start,
 	              std::pair<int, int> Target,
@@ -9,7 +10,7 @@ namespace Pathfinding
 	              std::pair<int, int> MapDimensions,
 	              std::vector<int>& OutPath)
 	{
-		SquareGrid grid(4, 3);
+		SquareGrid grid(MapDimensions.first, MapDimensions.second);
 
 		for (int row = 0; row < grid.height; row++)
 		{
@@ -18,14 +19,45 @@ namespace Pathfinding
 				const int map_index{row * grid.width + column};
 				const int map_value{Map[map_index]};
 
-				if (map_value == 1)
+				if (map_value == 0)
 				{
 					grid.walls.insert(GridLocation{column, row});
 				}
 			}
 		}
 
-		return false;
+		std::unordered_map<GridLocation, GridLocation> came_from;
+		std::unordered_map<GridLocation, double> cost_so_far;
+
+		GridLocation start{Start.first, Start.second};
+		GridLocation goal{Target.first, Target.second};
+
+		a_star_search(grid, start, goal, came_from, cost_so_far);
+
+		std::vector<GridLocation> path = reconstruct_path(start, goal, came_from);
+
+		draw_grid(grid, nullptr, &came_from, nullptr, &start, &goal);
+		std::cout << '\n';
+
+		draw_grid(grid, nullptr, nullptr, &path, &start, &goal);
+		std::cout << '\n';
+
+		draw_grid(grid, &cost_so_far, nullptr, nullptr, &start, &goal);
+
+		for (auto& location : path)
+		{
+			const int map_index{location.y * grid.width + location.x};
+
+			OutPath.push_back(map_index);
+		}
+
+		const bool isValidPath{path.empty() == false};
+
+		if (isValidPath)
+		{
+			OutPath.erase(OutPath.begin());
+		}
+
+		return isValidPath;
 	}
 }
-*/

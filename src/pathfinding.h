@@ -8,8 +8,7 @@
 
 #include "square_grid.h"
 
-/*
-namespace Pathfinding
+namespace pathfinding
 {
 	bool FindPath(std::pair<int, int> Start,
 	              std::pair<int, int> Target,
@@ -17,25 +16,6 @@ namespace Pathfinding
 	              std::pair<int, int> MapDimensions,
 	              std::vector<int>& OutPath);
 
-	struct GridLocation
-	{
-		int x, y;
-	};
-
-	struct SquareGrid
-	{
-		int width, height;
-		std::unordered_set<GridLocation> walls;
-
-		SquareGrid(int width_, int height_) : width(width_), height(height_)
-		{
-		}
-	};
-}
-*/
-
-namespace pathfinding
-{
 	template <typename T, typename priority_t>
 	struct PriorityQueue
 	{
