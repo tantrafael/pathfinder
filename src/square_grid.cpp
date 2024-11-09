@@ -4,76 +4,52 @@
 
 namespace pathfinding
 {
-	/*
-	bool operator ==(GridLocation a, GridLocation b)
-	{
-		return (a.x == b.x) && (a.y == b.y);
-	}
-
-	bool operator !=(GridLocation a, GridLocation b)
-	{
-		return !(a == b);
-	}
-
-	bool operator <(GridLocation a, GridLocation b)
-	{
-		return std::tie(a.x, a.y) < std::tie(b.x, b.y);
-	}
-	*/
-
-	/*
-	std::array<GridLocation, 4> SquareGrid::GridDirections = {
-		GridLocation{1, 0}, GridLocation{-1, 0},
-		GridLocation{0, -1}, GridLocation{0, 1}
-	};
-	*/
-	std::array<SquareGrid::GridLocation, 4> SquareGrid::GridDirections = {
-		GridLocation{1, 0}, GridLocation{-1, 0},
-		GridLocation{0, -1}, GridLocation{0, 1}
+	std::array<SquareGrid::Location, 4> SquareGrid::GridDirections = {
+		Location{1, 0}, Location{-1, 0},
+		Location{0, -1}, Location{0, 1}
 	};
 
 	SquareGrid::SquareGrid(int width, int height) : width(width), height(height)
 	{
 	}
 
-	bool SquareGrid::GridLocation::operator ==(const GridLocation& other) const
+	bool SquareGrid::Location::operator ==(const Location& other) const
 	{
 		return x == other.x && y == other.y;
 	}
 
-	bool SquareGrid::GridLocation::operator !=(const GridLocation& other) const
+	bool SquareGrid::Location::operator !=(const Location& other) const
 	{
 		return !(*this == other);
 	}
 
-	bool SquareGrid::GridLocation::operator <(const GridLocation& other) const
+	bool SquareGrid::Location::operator <(const Location& other) const
 	{
 		return std::tie(x, y) < std::tie(other.x, other.y);
 	}
 
-	std::size_t SquareGrid::GridLocationHash::operator()(const GridLocation& id) const noexcept
+	std::size_t SquareGrid::LocationHash::operator()(const Location& id) const noexcept
 	{
 		return std::hash<int>()(id.x ^ (id.y << 16));
 	}
 
-	bool SquareGrid::within_bounds(GridLocation id) const
+	bool SquareGrid::within_bounds(Location id) const
 	{
 		return (0 <= id.x) && (id.x < width) && (0 <= id.y) && (id.y < height);
 	}
 
-	bool SquareGrid::passable(GridLocation id) const
+	bool SquareGrid::passable(Location id) const
 	{
 		return impassable.find(id) == impassable.end();
 	}
 
-	//std::vector<GridLocation> SquareGrid::neighbors(GridLocation id) const
-	std::vector<SquareGrid::GridLocation> SquareGrid::neighbors(GridLocation id) const
+	std::vector<SquareGrid::Location> SquareGrid::neighbors(Location id) const
 	{
-		std::vector<GridLocation> results;
+		std::vector<Location> results;
 
-		for (GridLocation grid_direction : GridDirections)
+		for (Location grid_direction : GridDirections)
 		{
-			GridLocation next{id.x + grid_direction.x, id.y + grid_direction.y};
+			Location next{id.x + grid_direction.x, id.y + grid_direction.y};
 
 			if (within_bounds(next) && passable(next))
 			{
@@ -90,22 +66,8 @@ namespace pathfinding
 		return results;
 	}
 
-	double SquareGrid::cost(GridLocation from_node, GridLocation to_node) const
+	double SquareGrid::cost(Location from_node, Location to_node) const
 	{
 		return 1;
 	}
 }
-
-/*
-namespace std
-{
-	template <>
-	struct hash<pathfinding::SquareGrid::GridLocation>
-	{
-		std::size_t operator()(const pathfinding::SquareGrid::GridLocation& id) const noexcept
-		{
-			return std::hash<int>()(id.x ^ (id.y << 16));
-		}
-	};
-}
-*/

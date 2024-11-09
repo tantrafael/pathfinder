@@ -4,77 +4,34 @@
 #include <unordered_set>
 #include <vector>
 
-//#include "grid_location_hash.h"
-
-/*
 namespace pathfinding
 {
-	struct GridLocation
-	{
-		int x, y;
-	};
-}
-
-namespace std
-{
-	template <>
-	struct hash<pathfinding::GridLocation>
-	{
-		std::size_t operator()(const pathfinding::GridLocation& id) const noexcept
-		{
-			return std::hash<int>()(id.x ^ (id.y << 16));
-		}
-	};
-}
-*/
-
-namespace pathfinding
-{
-	/*
-	bool operator ==(GridLocation a, GridLocation b);
-	bool operator !=(GridLocation a, GridLocation b);
-	bool operator <(GridLocation a, GridLocation b);
-	*/
-
 	struct SquareGrid
 	{
-		struct GridLocation
+		struct Location
 		{
 			int x, y;
 
-			bool operator ==(const GridLocation& other) const;
-			bool operator !=(const GridLocation& other) const;
-			bool operator <(const GridLocation& other) const;
+			bool operator ==(const Location& other) const;
+			bool operator !=(const Location& other) const;
+			bool operator <(const Location& other) const;
 		};
 
-		struct GridLocationHash
+		struct LocationHash
 		{
-			std::size_t operator()(const GridLocation& id) const noexcept;
+			std::size_t operator()(const Location& id) const noexcept;
 		};
 
-		static std::array<GridLocation, 4> GridDirections;
+		typedef double CostType;
+
+		static std::array<Location, 4> GridDirections;
 		int width, height;
-		//std::unordered_set<GridLocation> impassable;
-		std::unordered_set<GridLocation, GridLocationHash> impassable;
+		std::unordered_set<Location, LocationHash> impassable;
 
 		SquareGrid(int width, int height);
-		bool within_bounds(GridLocation id) const;
-		bool passable(GridLocation id) const;
-		std::vector<GridLocation> neighbors(GridLocation id) const;
-		double cost(GridLocation from_node, GridLocation to_node) const;
+		bool within_bounds(Location id) const;
+		bool passable(Location id) const;
+		std::vector<Location> neighbors(Location id) const;
+		double cost(Location from_node, Location to_node) const;
 	};
 }
-
-/*
-namespace std
-{
-	template <>
-	struct hash<pathfinding::SquareGrid::GridLocation>
-	{
-		std::size_t operator()(const pathfinding::SquareGrid::GridLocation& id) const noexcept
-		{
-			return std::hash<int>()(id.x ^ (id.y << 16));
-		}
-	};
-}
-*/

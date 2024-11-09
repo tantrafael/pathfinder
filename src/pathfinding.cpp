@@ -21,28 +21,20 @@ namespace pathfinding
 
 				if (map_value == 0)
 				{
-					//grid.impassable.insert(GridLocation{column, row});
-					grid.impassable.insert(SquareGrid::GridLocation{column, row});
+					grid.impassable.insert(SquareGrid::Location{column, row});
 				}
 			}
 		}
 
-		//std::unordered_map<GridLocation, GridLocation> came_from;
-		//std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation> came_from;
-		std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation, SquareGrid::GridLocationHash> came_from;
-		//std::unordered_map<GridLocation, double> cost_so_far;
-		//std::unordered_map<SquareGrid::GridLocation, double> cost_so_far;
-		std::unordered_map<SquareGrid::GridLocation, double, SquareGrid::GridLocationHash> cost_so_far;
+		std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash> came_from;
+		std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash> cost_so_far;
 
-		//GridLocation start{Start.first, Start.second};
-		SquareGrid::GridLocation start{Start.first, Start.second};
-		//GridLocation target{Target.first, Target.second};
-		SquareGrid::GridLocation target{Target.first, Target.second};
+		SquareGrid::Location start{Start.first, Start.second};
+		SquareGrid::Location target{Target.first, Target.second};
 
 		a_star_search(grid, start, target, came_from, cost_so_far);
 
-		//std::vector<GridLocation> path = reconstruct_path(start, target, came_from);
-		std::vector<SquareGrid::GridLocation> path = reconstruct_path(start, target, came_from);
+		std::vector<SquareGrid::Location> path = reconstruct_path(start, target, came_from);
 
 		draw_grid(grid, nullptr, &came_from, nullptr, &start, &target);
 		std::cout << '\n';

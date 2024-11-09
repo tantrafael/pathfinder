@@ -12,28 +12,12 @@ namespace pathfinding
 	// This function outputs a grid. Pass in optional parameters to print
 	// the distances, point_to directions, or a path.
 	template <class Graph>
-	/*
 	void draw_grid(const Graph& graph,
-				   std::unordered_map<GridLocation, double>* distances = nullptr,
-				   std::unordered_map<GridLocation, GridLocation>* point_to = nullptr,
-				   std::vector<GridLocation>* path = nullptr,
-				   GridLocation* start = nullptr,
-				   GridLocation* target = nullptr)
-	*/
-	/*
-	void draw_grid(const Graph& graph,
-				   std::unordered_map<SquareGrid::GridLocation, double>* distances = nullptr,
-				   std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation>* point_to = nullptr,
-				   std::vector<SquareGrid::GridLocation>* path = nullptr,
-				   SquareGrid::GridLocation* start = nullptr,
-				   SquareGrid::GridLocation* target = nullptr)
-	*/
-	void draw_grid(const Graph& graph,
-				   std::unordered_map<SquareGrid::GridLocation, double, SquareGrid::GridLocationHash>* distances = nullptr,
-				   std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation, SquareGrid::GridLocationHash>* point_to = nullptr,
-				   std::vector<SquareGrid::GridLocation>* path = nullptr,
-				   SquareGrid::GridLocation* start = nullptr,
-				   SquareGrid::GridLocation* target = nullptr)
+				   std::unordered_map<SquareGrid::Location, double, SquareGrid::LocationHash>* distances = nullptr,
+				   std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
+				   std::vector<SquareGrid::Location>* path = nullptr,
+				   SquareGrid::Location* start = nullptr,
+				   SquareGrid::Location* target = nullptr)
 	{
 		const int field_width = 3;
 		std::cout << std::string(field_width * graph.width, '_') << '\n';
@@ -42,8 +26,7 @@ namespace pathfinding
 		{
 			for (int x = 0; x != graph.width; ++x)
 			{
-				//GridLocation id{x, y};
-				SquareGrid::GridLocation id{x, y};
+				SquareGrid::Location id{x, y};
 
 				if (graph.impassable.find(id) != graph.impassable.end())
 				{
@@ -63,8 +46,7 @@ namespace pathfinding
 				}
 				else if (point_to != nullptr && point_to->count(id))
 				{
-					//GridLocation next = (*point_to)[id];
-					SquareGrid::GridLocation next = (*point_to)[id];
+					SquareGrid::Location next = (*point_to)[id];
 					if (next.x == x + 1) { std::cout << " > "; }
 					else if (next.x == x - 1) { std::cout << " < "; }
 					else if (next.y == y + 1) { std::cout << " v "; }
