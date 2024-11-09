@@ -16,24 +16,27 @@ namespace pathfinding
 	              std::pair<int, int> MapDimensions,
 	              std::vector<int>& OutPath);
 
-	template <typename T, typename priority_t>
+	template <typename T, typename TPriority>
 	struct PriorityQueue
 	{
-		typedef std::pair<priority_t, T> PQElement;
-		std::priority_queue<PQElement, std::vector<PQElement>, std::greater<PQElement>> elements;
+		typedef std::pair<TPriority, T> Element;
+
+		//std::priority_queue<PQElement, std::vector<PQElement>, std::greater<PQElement>> elements;
+		std::priority_queue<Element, std::vector<Element>, std::greater<>> elements;
 
 		bool empty() const { return elements.empty(); }
-		void put(T item, priority_t priority) { elements.emplace(priority, item); }
+		void put(T item, TPriority priority) { elements.emplace(priority, item); }
 
 		T get()
 		{
 			T best_item = elements.top().second;
 			elements.pop();
+
 			return best_item;
 		}
 	};
 
-	inline double heuristic(SquareGrid::Location a, SquareGrid::Location b)
+	inline SquareGrid::CostType heuristic(SquareGrid::Location a, SquareGrid::Location b)
 	{
 		return std::abs(a.x - b.x) + std::abs(a.y - b.y);
 	}
@@ -48,8 +51,8 @@ namespace pathfinding
 		typedef typename Graph::Location Location;
 		typedef typename Graph::CostType CostType;
 
-		PriorityQueue<typename Graph::Location, CostType> frontier;
-		std::vector<Location> neighbors;
+		PriorityQueue<Location, CostType> frontier;
+		//std::vector<Location> neighbors;
 
 		frontier.put(start, CostType(0));
 		came_from[start] = start;
@@ -64,7 +67,10 @@ namespace pathfinding
 				break;
 			}
 
-			for (Location next : graph.neighbors(current))
+			const std::vector<Location> neighbors{ graph.get_neighbors(current) };
+			//graph.get_neighbors(current, neighbors);
+
+			for (const Location& next : neighbors)
 			{
 				CostType new_cost = cost_so_far[current] + graph.cost(current, next);
 

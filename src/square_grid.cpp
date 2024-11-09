@@ -43,7 +43,7 @@ namespace pathfinding
 		return impassable.find(id) == impassable.end();
 	}
 
-	std::vector<SquareGrid::Location> SquareGrid::neighbors(Location id) const
+	std::vector<SquareGrid::Location> SquareGrid::get_neighbors(Location id) const
 	{
 		std::vector<Location> results;
 
@@ -66,7 +66,7 @@ namespace pathfinding
 		return results;
 	}
 
-	double SquareGrid::cost(Location from_node, Location to_node) const
+	SquareGrid::CostType SquareGrid::cost(Location from_node, Location to_node) const
 	{
 		return 1;
 	}
