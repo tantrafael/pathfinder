@@ -12,16 +12,18 @@ namespace pathfinding
 	{
 		SquareGrid Grid(MapDimensions.first, MapDimensions.second);
 
-		for (int row = 0; row < Grid.Height; row++)
+		for (int Row{0}; Row < Grid.Height; Row++)
 		{
-			for (int column = 0; column < Grid.Width; column++)
+			for (int Column{0}; Column < Grid.Width; Column++)
 			{
-				const int map_index{row * Grid.Width + column};
-				const int map_value{Map[map_index]};
+				const int MapIndex{Row * Grid.Width + Column};
+				const int MapValue{Map[MapIndex]};
+				const bool IsImpassable{MapValue == 0};
 
-				if (map_value == 0)
+				if (IsImpassable)
 				{
-					Grid.Impassable.insert(SquareGrid::Location{column, row});
+					const SquareGrid::Location Location{Row, Column};
+					Grid.Impassable.insert(Location);
 				}
 			}
 		}
@@ -53,6 +55,7 @@ namespace pathfinding
 
 		const bool isValidPath{Path.empty() == false};
 
+		// Do not include start position.
 		if (isValidPath)
 		{
 			OutPath.erase(OutPath.begin());
