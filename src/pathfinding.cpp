@@ -22,7 +22,7 @@ namespace pathfinding
 
 				if (IsImpassable)
 				{
-					const SquareGrid::Location Location{Row, Column};
+					const SquareGrid::Location Location{Column, Row};
 					Grid.Impassable.insert(Location);
 				}
 			}
