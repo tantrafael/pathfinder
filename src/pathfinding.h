@@ -23,8 +23,15 @@ namespace pathfinding
 
 		std::priority_queue<Element, std::vector<Element>, std::greater<>> Elements;
 
-		bool IsEmpty() const { return Elements.empty(); }
-		void Add(T item, TPriority priority) { Elements.emplace(priority, item); }
+		bool IsEmpty() const
+		{
+			return Elements.empty();
+		}
+
+		void Add(T item, TPriority priority)
+		{
+			Elements.emplace(priority, item);
+		}
 
 		T Get()
 		{
@@ -42,15 +49,15 @@ namespace pathfinding
 		return ManhattanDistance;
 	}
 
-	template <typename Graph>
-	void AStarSearch(Graph graph,
-	                 typename Graph::Location Start,
-	                 typename Graph::Location Goal,
-	                 std::unordered_map<typename Graph::Location, typename Graph::Location, SquareGrid::LocationHash>& CameFrom,
-	                 std::unordered_map<typename Graph::Location, typename Graph::CostType, SquareGrid::LocationHash>& CostSoFar)
+	template <typename TGraph>
+	void AStarSearch(TGraph Graph,
+	                 typename TGraph::Location Start,
+	                 typename TGraph::Location Goal,
+	                 std::unordered_map<typename TGraph::Location, typename TGraph::Location, SquareGrid::LocationHash>& CameFrom,
+	                 std::unordered_map<typename TGraph::Location, typename TGraph::CostType, SquareGrid::LocationHash>& CostSoFar)
 	{
-		typedef typename Graph::Location Location;
-		typedef typename Graph::CostType CostType;
+		typedef typename TGraph::Location Location;
+		typedef typename TGraph::CostType CostType;
 
 		PriorityQueue<Location, CostType> Frontier;
 		//std::vector<Location> neighbors;
@@ -61,19 +68,19 @@ namespace pathfinding
 
 		while (!Frontier.IsEmpty())
 		{
-			Location Current = Frontier.Get();
+			const Location Current{Frontier.Get()};
 
 			if (Current == Goal)
 			{
 				break;
 			}
 
-			const std::vector<Location> Neighbors{ graph.GetNeighbors(Current) };
+			const std::vector<Location> Neighbors{Graph.GetNeighbors(Current)};
 			//graph.get_neighbors(current, neighbors);
 
 			for (const Location Neighbor : Neighbors)
 			{
-				const CostType Cost{CostSoFar[Current] + graph.GetCost(Current, Neighbor)};
+				const CostType Cost{CostSoFar[Current] + Graph.GetCost(Current, Neighbor)};
 				const bool IsFirstVisit{CostSoFar.find(Neighbor) == CostSoFar.end()};
 				//const bool IsFirstEncounter{!CostSoFar.contains(Neighbor)};
 				const bool IsLowerCost{Cost < CostSoFar[Neighbor]};
