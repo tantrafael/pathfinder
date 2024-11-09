@@ -5,6 +5,7 @@
 #include <queue>
 #include <algorithm>
 #include <cmath>
+#include <functional>
 
 #include "square_grid.h"
 
@@ -51,10 +52,11 @@ namespace pathfinding
 
 	template <typename TGraph>
 	void AStarSearch(TGraph Graph,
-	                 typename TGraph::Location Start,
-	                 typename TGraph::Location Goal,
-	                 std::unordered_map<typename TGraph::Location, typename TGraph::Location, SquareGrid::LocationHash>& CameFrom,
-	                 std::unordered_map<typename TGraph::Location, typename TGraph::CostType, SquareGrid::LocationHash>& CostSoFar)
+					 typename TGraph::Location Start,
+					 typename TGraph::Location Goal,
+					 std::function<typename TGraph::CostType(typename TGraph::Location A, typename TGraph::Location B)> Heuristic,
+					 std::unordered_map<typename TGraph::Location, typename TGraph::Location, SquareGrid::LocationHash>& CameFrom,
+					 std::unordered_map<typename TGraph::Location, typename TGraph::CostType, SquareGrid::LocationHash>& CostSoFar)
 	{
 		typedef typename TGraph::Location Location;
 		typedef typename TGraph::CostType CostType;

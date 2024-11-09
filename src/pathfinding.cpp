@@ -32,9 +32,9 @@ namespace pathfinding
 		SquareGrid::Location StartLocation{Start.first, Start.second};
 		SquareGrid::Location GoalLocation{Target.first, Target.second};
 
-		AStarSearch(Grid, StartLocation, GoalLocation, CameFrom, CostSoFar);
+		AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);
 
-		std::vector<SquareGrid::Location> Path = ReconstructPath(StartLocation, GoalLocation, CameFrom);
+		const std::vector<SquareGrid::Location> Path{ReconstructPath(StartLocation, GoalLocation, CameFrom)};
 
 		DrawGrid(Grid, nullptr, &CameFrom, nullptr, &StartLocation, &GoalLocation);
 		std::cout << '\n';

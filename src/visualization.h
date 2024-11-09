@@ -13,11 +13,11 @@ namespace pathfinding
 	// the distances, point_to directions, or a path.
 	template <class Graph>
 	void DrawGrid(const Graph& graph,
-				   std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash>* distances = nullptr,
-				   std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
-				   std::vector<SquareGrid::Location>* path = nullptr,
-				   SquareGrid::Location* start = nullptr,
-				   SquareGrid::Location* target = nullptr)
+	              std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash>* distances = nullptr,
+	              std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
+	              const std::vector<SquareGrid::Location>* path = nullptr,
+	              SquareGrid::Location* start = nullptr,
+	              SquareGrid::Location* target = nullptr)
 	{
 		const int field_width = 3;
 		std::cout << std::string(field_width * graph.Width, '_') << '\n';
