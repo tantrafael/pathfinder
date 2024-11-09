@@ -43,9 +43,11 @@ namespace pathfinding
 		return Impassable.find(GridLocation) == Impassable.end();
 	}
 
-	std::vector<SquareGrid::Location> SquareGrid::GetNeighbors(Location GridLocation) const
+	//std::vector<SquareGrid::Location> SquareGrid::GetNeighbors(Location GridLocation) const
+	void SquareGrid::GetNeighbors(Location GridLocation, std::vector<Location>& OutNeighbors) const
 	{
-		std::vector<Location> Neighbors;
+		//std::vector<Location> Neighbors;
+		OutNeighbors.clear();
 
 		for (const Location Direction : Directions)
 		{
@@ -53,17 +55,18 @@ namespace pathfinding
 
 			if (IsWithinBounds(AdjacentLocation) && IsPassable(AdjacentLocation))
 			{
-				Neighbors.push_back(AdjacentLocation);
+				//Neighbors.push_back(AdjacentLocation);
+				OutNeighbors.push_back(AdjacentLocation);
 			}
 		}
 
 		// Simple way to get fairly good-looking paths.
 		if ((GridLocation.X + GridLocation.Y) % 2 == 0)
 		{
-			std::reverse(Neighbors.begin(), Neighbors.end());
+			std::reverse(OutNeighbors.begin(), OutNeighbors.end());
 		}
 
-		return Neighbors;
+		//return Neighbors;
 	}
 
 	SquareGrid::CostType SquareGrid::GetCost(Location FromLocation, Location ToLocation)
