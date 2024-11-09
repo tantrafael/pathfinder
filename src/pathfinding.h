@@ -33,15 +33,21 @@ namespace pathfinding
 		}
 	};
 
-	inline double heuristic(GridLocation a, GridLocation b)
+	//inline double heuristic(GridLocation a, GridLocation b)
+	inline double heuristic(SquareGrid::GridLocation a, SquareGrid::GridLocation b)
 	{
 		return std::abs(a.x - b.x) + std::abs(a.y - b.y);
 	}
 
 	template <typename Location, typename Graph>
+	/*
 	void a_star_search(Graph graph, Location start, Location target,
 	                   std::unordered_map<Location, Location>& came_from,
 	                   std::unordered_map<Location, double>& cost_so_far)
+	*/
+	void a_star_search(Graph graph, Location start, Location target,
+					   std::unordered_map<Location, Location, SquareGrid::GridLocation_hash>& came_from,
+					   std::unordered_map<Location, double, SquareGrid::GridLocation_hash>& cost_so_far)
 	{
 		PriorityQueue<Location, double> frontier;
 		frontier.put(start, 0);
@@ -70,8 +76,12 @@ namespace pathfinding
 	}
 
 	template <typename Location>
+	/*
 	std::vector<Location> reconstruct_path(Location start, Location target,
 	                                       std::unordered_map<Location, Location> came_from)
+	*/
+	std::vector<Location> reconstruct_path(Location start, Location target,
+	                                       std::unordered_map<Location, Location, SquareGrid::GridLocation_hash> came_from)
 	{
 		std::vector<Location> path;
 		Location current = target;

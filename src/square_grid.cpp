@@ -4,6 +4,7 @@
 
 namespace pathfinding
 {
+	/*
 	bool operator ==(GridLocation a, GridLocation b)
 	{
 		return (a.x == b.x) && (a.y == b.y);
@@ -18,8 +19,15 @@ namespace pathfinding
 	{
 		return std::tie(a.x, a.y) < std::tie(b.x, b.y);
 	}
+	*/
 
+	/*
 	std::array<GridLocation, 4> SquareGrid::GridDirections = {
+		GridLocation{1, 0}, GridLocation{-1, 0},
+		GridLocation{0, -1}, GridLocation{0, 1}
+	};
+	*/
+	std::array<SquareGrid::GridLocation, 4> SquareGrid::GridDirections = {
 		GridLocation{1, 0}, GridLocation{-1, 0},
 		GridLocation{0, -1}, GridLocation{0, 1}
 	};
@@ -38,7 +46,8 @@ namespace pathfinding
 		return impassable.find(id) == impassable.end();
 	}
 
-	std::vector<GridLocation> SquareGrid::neighbors(GridLocation id) const
+	//std::vector<GridLocation> SquareGrid::neighbors(GridLocation id) const
+	std::vector<SquareGrid::GridLocation> SquareGrid::neighbors(GridLocation id) const
 	{
 		std::vector<GridLocation> results;
 
@@ -66,3 +75,17 @@ namespace pathfinding
 		return 1;
 	}
 }
+
+/*
+namespace std
+{
+	template <>
+	struct hash<pathfinding::SquareGrid::GridLocation>
+	{
+		std::size_t operator()(const pathfinding::SquareGrid::GridLocation& id) const noexcept
+		{
+			return std::hash<int>()(id.x ^ (id.y << 16));
+		}
+	};
+}
+*/
