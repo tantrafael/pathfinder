@@ -46,8 +46,8 @@ namespace pathfinding
 	                   std::unordered_map<Location, double>& cost_so_far)
 	*/
 	void a_star_search(Graph graph, Location start, Location target,
-					   std::unordered_map<Location, Location, SquareGrid::GridLocation_hash>& came_from,
-					   std::unordered_map<Location, double, SquareGrid::GridLocation_hash>& cost_so_far)
+					   std::unordered_map<Location, Location, SquareGrid::GridLocationHash>& came_from,
+					   std::unordered_map<Location, double, SquareGrid::GridLocationHash>& cost_so_far)
 	{
 		PriorityQueue<Location, double> frontier;
 		frontier.put(start, 0);
@@ -81,7 +81,7 @@ namespace pathfinding
 	                                       std::unordered_map<Location, Location> came_from)
 	*/
 	std::vector<Location> reconstruct_path(Location start, Location target,
-	                                       std::unordered_map<Location, Location, SquareGrid::GridLocation_hash> came_from)
+	                                       std::unordered_map<Location, Location, SquareGrid::GridLocationHash> came_from)
 	{
 		std::vector<Location> path;
 		Location current = target;

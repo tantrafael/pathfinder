@@ -29,8 +29,8 @@ namespace pathfinding
 				   SquareGrid::GridLocation* target = nullptr)
 	*/
 	void draw_grid(const Graph& graph,
-				   std::unordered_map<SquareGrid::GridLocation, double, SquareGrid::GridLocation_hash>* distances = nullptr,
-				   std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation, SquareGrid::GridLocation_hash>* point_to = nullptr,
+				   std::unordered_map<SquareGrid::GridLocation, double, SquareGrid::GridLocationHash>* distances = nullptr,
+				   std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation, SquareGrid::GridLocationHash>* point_to = nullptr,
 				   std::vector<SquareGrid::GridLocation>* path = nullptr,
 				   SquareGrid::GridLocation* start = nullptr,
 				   SquareGrid::GridLocation* target = nullptr)

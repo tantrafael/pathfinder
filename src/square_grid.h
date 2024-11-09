@@ -42,23 +42,20 @@ namespace pathfinding
 		{
 			int x, y;
 
-			bool operator ==(const GridLocation& other) const { return x == other.x && y == other.y; }
-			bool operator !=(const GridLocation& other) const { return !(*this == other); }
-			bool operator <(const GridLocation& other) const { return std::tie(x, y) < std::tie(other.x, other.y); }
+			bool operator ==(const GridLocation& other) const;
+			bool operator !=(const GridLocation& other) const;
+			bool operator <(const GridLocation& other) const;
 		};
 
-		struct GridLocation_hash
+		struct GridLocationHash
 		{
-			std::size_t operator()(const GridLocation& id) const noexcept
-			{
-				return std::hash<int>()(id.x ^ (id.y << 16));
-			}
+			std::size_t operator()(const GridLocation& id) const noexcept;
 		};
 
 		static std::array<GridLocation, 4> GridDirections;
 		int width, height;
 		//std::unordered_set<GridLocation> impassable;
-		std::unordered_set<GridLocation, GridLocation_hash> impassable;
+		std::unordered_set<GridLocation, GridLocationHash> impassable;
 
 		SquareGrid(int width, int height);
 		bool within_bounds(GridLocation id) const;

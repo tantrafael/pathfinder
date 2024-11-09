@@ -36,6 +36,26 @@ namespace pathfinding
 	{
 	}
 
+	bool SquareGrid::GridLocation::operator ==(const GridLocation& other) const
+	{
+		return x == other.x && y == other.y;
+	}
+
+	bool SquareGrid::GridLocation::operator !=(const GridLocation& other) const
+	{
+		return !(*this == other);
+	}
+
+	bool SquareGrid::GridLocation::operator <(const GridLocation& other) const
+	{
+		return std::tie(x, y) < std::tie(other.x, other.y);
+	}
+
+	std::size_t SquareGrid::GridLocationHash::operator()(const GridLocation& id) const noexcept
+	{
+		return std::hash<int>()(id.x ^ (id.y << 16));
+	}
+
 	bool SquareGrid::within_bounds(GridLocation id) const
 	{
 		return (0 <= id.x) && (id.x < width) && (0 <= id.y) && (id.y < height);

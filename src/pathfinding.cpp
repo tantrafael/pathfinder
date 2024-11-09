@@ -29,10 +29,10 @@ namespace pathfinding
 
 		//std::unordered_map<GridLocation, GridLocation> came_from;
 		//std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation> came_from;
-		std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation, SquareGrid::GridLocation_hash> came_from;
+		std::unordered_map<SquareGrid::GridLocation, SquareGrid::GridLocation, SquareGrid::GridLocationHash> came_from;
 		//std::unordered_map<GridLocation, double> cost_so_far;
 		//std::unordered_map<SquareGrid::GridLocation, double> cost_so_far;
-		std::unordered_map<SquareGrid::GridLocation, double, SquareGrid::GridLocation_hash> cost_so_far;
+		std::unordered_map<SquareGrid::GridLocation, double, SquareGrid::GridLocationHash> cost_so_far;
 
 		//GridLocation start{Start.first, Start.second};
 		SquareGrid::GridLocation start{Start.first, Start.second};
