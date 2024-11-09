@@ -21,93 +21,99 @@ namespace pathfinding
 	{
 		typedef std::pair<TPriority, T> Element;
 
-		//std::priority_queue<PQElement, std::vector<PQElement>, std::greater<PQElement>> elements;
-		std::priority_queue<Element, std::vector<Element>, std::greater<>> elements;
+		std::priority_queue<Element, std::vector<Element>, std::greater<>> Elements;
 
-		bool empty() const { return elements.empty(); }
-		void put(T item, TPriority priority) { elements.emplace(priority, item); }
+		bool IsEmpty() const { return Elements.empty(); }
+		void Add(T item, TPriority priority) { Elements.emplace(priority, item); }
 
-		T get()
+		T Get()
 		{
-			T best_item = elements.top().second;
-			elements.pop();
+			const T TopElement{Elements.top().second};
+			Elements.pop();
 
-			return best_item;
+			return TopElement;
 		}
 	};
 
-	inline SquareGrid::CostType heuristic(SquareGrid::Location a, SquareGrid::Location b)
+	inline SquareGrid::CostType Heuristic(SquareGrid::Location A, SquareGrid::Location B)
 	{
-		return std::abs(a.x - b.x) + std::abs(a.y - b.y);
+		const int ManhattanDistance{std::abs(A.X - B.X) + std::abs(A.Y - B.Y)};
+
+		return ManhattanDistance;
 	}
 
 	template <typename Graph>
-	void a_star_search(Graph graph,
-	                   typename Graph::Location start,
-	                   typename Graph::Location target,
-	                   std::unordered_map<typename Graph::Location, typename Graph::Location, SquareGrid::LocationHash>& came_from,
-	                   std::unordered_map<typename Graph::Location, typename Graph::CostType, SquareGrid::LocationHash>& cost_so_far)
+	void AStarSearch(Graph graph,
+	                 typename Graph::Location Start,
+	                 typename Graph::Location Goal,
+	                 std::unordered_map<typename Graph::Location, typename Graph::Location, SquareGrid::LocationHash>& CameFrom,
+	                 std::unordered_map<typename Graph::Location, typename Graph::CostType, SquareGrid::LocationHash>& CostSoFar)
 	{
 		typedef typename Graph::Location Location;
 		typedef typename Graph::CostType CostType;
 
-		PriorityQueue<Location, CostType> frontier;
+		PriorityQueue<Location, CostType> Frontier;
 		//std::vector<Location> neighbors;
 
-		frontier.put(start, CostType(0));
-		came_from[start] = start;
-		cost_so_far[start] = CostType(0);
+		Frontier.Add(Start, CostType(0));
+		CameFrom[Start] = Start;
+		CostSoFar[Start] = CostType(0);
 
-		while (!frontier.empty())
+		while (!Frontier.IsEmpty())
 		{
-			Location current = frontier.get();
+			Location Current = Frontier.Get();
 
-			if (current == target)
+			if (Current == Goal)
 			{
 				break;
 			}
 
-			const std::vector<Location> neighbors{ graph.get_neighbors(current) };
+			const std::vector<Location> Neighbors{ graph.GetNeighbors(Current) };
 			//graph.get_neighbors(current, neighbors);
 
-			for (const Location& next : neighbors)
+			for (const Location Neighbor : Neighbors)
 			{
-				CostType new_cost = cost_so_far[current] + graph.cost(current, next);
+				const CostType Cost{CostSoFar[Current] + graph.GetCost(Current, Neighbor)};
+				const bool IsFirstVisit{CostSoFar.find(Neighbor) == CostSoFar.end()};
+				//const bool IsFirstEncounter{!CostSoFar.contains(Neighbor)};
+				const bool IsLowerCost{Cost < CostSoFar[Neighbor]};
+				const bool IsCostUpdate{IsFirstVisit || IsLowerCost};
 
-				if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next])
+				if (IsCostUpdate)
 				{
-					cost_so_far[next] = new_cost;
-					CostType priority = new_cost + heuristic(next, target);
-					frontier.put(next, priority);
-					came_from[next] = current;
+					CostSoFar[Neighbor] = Cost;
+					const CostType Priority{Cost + Heuristic(Neighbor, Goal)};
+					Frontier.Add(Neighbor, Priority);
+					CameFrom[Neighbor] = Current;
 				}
 			}
 		}
 	}
 
 	template <typename Location>
-	std::vector<Location> reconstruct_path(Location start, Location target,
-	                                       std::unordered_map<Location, Location, SquareGrid::LocationHash> came_from)
+	std::vector<Location> ReconstructPath(Location Start, Location Goal,
+	                                      std::unordered_map<Location, Location, SquareGrid::LocationHash> CameFrom)
 	{
-		std::vector<Location> path;
-		Location current = target;
+		std::vector<Location> Path;
+		Location Current = Goal;
 
-		const bool no_path_found{came_from.find(target) == came_from.end()};
+		const bool IsNoPath{CameFrom.find(Goal) == CameFrom.end()};
+		//const bool IsNoPath{!CameFrom.contains(Goal)};
 
-		if (no_path_found)
+		if (IsNoPath)
 		{
-			return path;
+			return Path;
 		}
 
-		while (current != start)
+		while (Current != Start)
 		{
-			path.push_back(current);
-			current = came_from[current];
+			Path.push_back(Current);
+			Current = CameFrom[Current];
 		}
 
-		path.push_back(start);
-		std::reverse(path.begin(), path.end());
+		Path.push_back(Start);
+		std::reverse(Path.begin(), Path.end());
 
-		return path;
+		return Path;
 	}
 }

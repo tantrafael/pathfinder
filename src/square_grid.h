@@ -10,28 +10,28 @@ namespace pathfinding
 	{
 		struct Location
 		{
-			int x, y;
+			int X, Y;
 
-			bool operator ==(const Location& other) const;
-			bool operator !=(const Location& other) const;
-			bool operator <(const Location& other) const;
+			bool operator ==(Location Other) const;
+			bool operator !=(Location Other) const;
+			bool operator <(Location Other) const;
 		};
 
 		struct LocationHash
 		{
-			std::size_t operator()(const Location& id) const noexcept;
+			std::size_t operator()(Location GridLocation) const noexcept;
 		};
 
 		typedef int CostType;
 
-		static std::array<Location, 4> GridDirections;
-		int width, height;
-		std::unordered_set<Location, LocationHash> impassable;
+		static std::array<Location, 4> Directions;
+		int Width, Height;
+		std::unordered_set<Location, LocationHash> Impassable;
 
-		SquareGrid(int width, int height);
-		bool within_bounds(Location id) const;
-		bool passable(Location id) const;
-		std::vector<Location> get_neighbors(Location id) const;
-		CostType cost(Location from_node, Location to_node) const;
+		SquareGrid(int Width, int Height);
+		bool IsWithinBounds(Location GridLocation) const;
+		bool IsPassable(Location GridLocation) const;
+		std::vector<Location> GetNeighbors(Location GridLocation) const;
+		static CostType GetCost(Location FromLocation, Location ToLocation);
 	};
 }

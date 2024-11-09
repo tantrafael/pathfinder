@@ -4,69 +4,69 @@
 
 namespace pathfinding
 {
-	std::array<SquareGrid::Location, 4> SquareGrid::GridDirections = {
+	std::array<SquareGrid::Location, 4> SquareGrid::Directions = {
 		Location{1, 0}, Location{-1, 0},
 		Location{0, -1}, Location{0, 1}
 	};
 
-	SquareGrid::SquareGrid(int width, int height) : width(width), height(height)
+	SquareGrid::SquareGrid(int Width, int Height) : Width(Width), Height(Height)
 	{
 	}
 
-	bool SquareGrid::Location::operator ==(const Location& other) const
+	bool SquareGrid::Location::operator ==(Location Other) const
 	{
-		return x == other.x && y == other.y;
+		return (X == Other.X) && (Y == Other.Y);
 	}
 
-	bool SquareGrid::Location::operator !=(const Location& other) const
+	bool SquareGrid::Location::operator !=(Location Other) const
 	{
-		return !(*this == other);
+		return !(*this == Other);
 	}
 
-	bool SquareGrid::Location::operator <(const Location& other) const
+	bool SquareGrid::Location::operator <(Location Other) const
 	{
-		return std::tie(x, y) < std::tie(other.x, other.y);
+		return std::tie(X, Y) < std::tie(Other.X, Other.Y);
 	}
 
-	std::size_t SquareGrid::LocationHash::operator()(const Location& id) const noexcept
+	std::size_t SquareGrid::LocationHash::operator()(Location GridLocation) const noexcept
 	{
-		return std::hash<int>()(id.x ^ (id.y << 16));
+		return std::hash<int>()(GridLocation.X ^ (GridLocation.Y << 16));
 	}
 
-	bool SquareGrid::within_bounds(Location id) const
+	bool SquareGrid::IsWithinBounds(Location GridLocation) const
 	{
-		return (0 <= id.x) && (id.x < width) && (0 <= id.y) && (id.y < height);
+		return (0 <= GridLocation.X) && (GridLocation.X < Width) && (0 <= GridLocation.Y) && (GridLocation.Y < Height);
 	}
 
-	bool SquareGrid::passable(Location id) const
+	bool SquareGrid::IsPassable(Location GridLocation) const
 	{
-		return impassable.find(id) == impassable.end();
+		return Impassable.find(GridLocation) == Impassable.end();
 	}
 
-	std::vector<SquareGrid::Location> SquareGrid::get_neighbors(Location id) const
+	std::vector<SquareGrid::Location> SquareGrid::GetNeighbors(Location GridLocation) const
 	{
-		std::vector<Location> results;
+		std::vector<Location> Neighbors;
 
-		for (Location grid_direction : GridDirections)
+		for (const Location Direction : Directions)
 		{
-			Location next{id.x + grid_direction.x, id.y + grid_direction.y};
+			Location AdjacentLocation{GridLocation.X + Direction.X, GridLocation.Y + Direction.Y};
 
-			if (within_bounds(next) && passable(next))
+			if (IsWithinBounds(AdjacentLocation) && IsPassable(AdjacentLocation))
 			{
-				results.push_back(next);
+				Neighbors.push_back(AdjacentLocation);
 			}
 		}
 
-		// See "Ugly paths" section for an explanation.
-		if ((id.x + id.y) % 2 == 0)
+		// Simple way to get fairly good-looking paths.
+		if ((GridLocation.X + GridLocation.Y) % 2 == 0)
 		{
-			std::reverse(results.begin(), results.end());
+			std::reverse(Neighbors.begin(), Neighbors.end());
 		}
 
-		return results;
+		return Neighbors;
 	}
 
-	SquareGrid::CostType SquareGrid::cost(Location from_node, Location to_node) const
+	SquareGrid::CostType SquareGrid::GetCost(Location FromLocation, Location ToLocation)
 	{
 		return 1;
 	}

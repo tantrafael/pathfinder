@@ -9,7 +9,7 @@ namespace pathfinding
 		{
 			for (int y = y1; y < y2; ++y)
 			{
-				grid.impassable.insert(SquareGrid::Location{x, y});
+				grid.Impassable.insert(SquareGrid::Location{x, y});
 			}
 		}
 	}

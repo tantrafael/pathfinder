@@ -10,48 +10,48 @@ namespace pathfinding
 	              std::pair<int, int> MapDimensions,
 	              std::vector<int>& OutPath)
 	{
-		SquareGrid grid(MapDimensions.first, MapDimensions.second);
+		SquareGrid Grid(MapDimensions.first, MapDimensions.second);
 
-		for (int row = 0; row < grid.height; row++)
+		for (int row = 0; row < Grid.Height; row++)
 		{
-			for (int column = 0; column < grid.width; column++)
+			for (int column = 0; column < Grid.Width; column++)
 			{
-				const int map_index{row * grid.width + column};
+				const int map_index{row * Grid.Width + column};
 				const int map_value{Map[map_index]};
 
 				if (map_value == 0)
 				{
-					grid.impassable.insert(SquareGrid::Location{column, row});
+					Grid.Impassable.insert(SquareGrid::Location{column, row});
 				}
 			}
 		}
 
-		std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash> came_from;
-		std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash> cost_so_far;
+		std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash> CameFrom;
+		std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash> CostSoFar;
 
-		SquareGrid::Location start{Start.first, Start.second};
-		SquareGrid::Location target{Target.first, Target.second};
+		SquareGrid::Location StartLocation{Start.first, Start.second};
+		SquareGrid::Location GoalLocation{Target.first, Target.second};
 
-		a_star_search(grid, start, target, came_from, cost_so_far);
+		AStarSearch(Grid, StartLocation, GoalLocation, CameFrom, CostSoFar);
 
-		std::vector<SquareGrid::Location> path = reconstruct_path(start, target, came_from);
+		std::vector<SquareGrid::Location> Path = ReconstructPath(StartLocation, GoalLocation, CameFrom);
 
-		draw_grid(grid, nullptr, &came_from, nullptr, &start, &target);
+		DrawGrid(Grid, nullptr, &CameFrom, nullptr, &StartLocation, &GoalLocation);
 		std::cout << '\n';
 
-		draw_grid(grid, nullptr, nullptr, &path, &start, &target);
+		DrawGrid(Grid, nullptr, nullptr, &Path, &StartLocation, &GoalLocation);
 		std::cout << '\n';
 
-		draw_grid(grid, &cost_so_far, nullptr, nullptr, &start, &target);
+		DrawGrid(Grid, &CostSoFar, nullptr, nullptr, &StartLocation, &GoalLocation);
 
-		for (auto& location : path)
+		for (auto& location : Path)
 		{
-			const int map_index{location.y * grid.width + location.x};
+			const int map_index{location.Y * Grid.Width + location.X};
 
 			OutPath.push_back(map_index);
 		}
 
-		const bool isValidPath{path.empty() == false};
+		const bool isValidPath{Path.empty() == false};
 
 		if (isValidPath)
 		{

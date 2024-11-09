@@ -12,8 +12,7 @@ namespace pathfinding
 	// This function outputs a grid. Pass in optional parameters to print
 	// the distances, point_to directions, or a path.
 	template <class Graph>
-	void draw_grid(const Graph& graph,
-				   //std::unordered_map<SquareGrid::Location, double, SquareGrid::LocationHash>* distances = nullptr,
+	void DrawGrid(const Graph& graph,
 				   std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash>* distances = nullptr,
 				   std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
 				   std::vector<SquareGrid::Location>* path = nullptr,
@@ -21,15 +20,15 @@ namespace pathfinding
 				   SquareGrid::Location* target = nullptr)
 	{
 		const int field_width = 3;
-		std::cout << std::string(field_width * graph.width, '_') << '\n';
+		std::cout << std::string(field_width * graph.Width, '_') << '\n';
 
-		for (int y = 0; y != graph.height; ++y)
+		for (int y = 0; y != graph.Height; ++y)
 		{
-			for (int x = 0; x != graph.width; ++x)
+			for (int x = 0; x != graph.Width; ++x)
 			{
 				SquareGrid::Location id{x, y};
 
-				if (graph.impassable.find(id) != graph.impassable.end())
+				if (graph.Impassable.find(id) != graph.Impassable.end())
 				{
 					std::cout << std::string(field_width, '#');
 				}
@@ -48,10 +47,10 @@ namespace pathfinding
 				else if (point_to != nullptr && point_to->count(id))
 				{
 					SquareGrid::Location next = (*point_to)[id];
-					if (next.x == x + 1) { std::cout << " > "; }
-					else if (next.x == x - 1) { std::cout << " < "; }
-					else if (next.y == y + 1) { std::cout << " v "; }
-					else if (next.y == y - 1) { std::cout << " ^ "; }
+					if (next.X == x + 1) { std::cout << " > "; }
+					else if (next.X == x - 1) { std::cout << " < "; }
+					else if (next.Y == y + 1) { std::cout << " v "; }
+					else if (next.Y == y - 1) { std::cout << " ^ "; }
 					else { std::cout << " * "; }
 				}
 				else if (distances != nullptr && distances->count(id))
@@ -67,6 +66,6 @@ namespace pathfinding
 			std::cout << '\n';
 		}
 
-		std::cout << std::string(field_width * graph.width, '~') << '\n';
+		std::cout << std::string(field_width * graph.Width, '~') << '\n';
 	}
 }
