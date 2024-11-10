@@ -12,11 +12,13 @@ namespace pathfinding
 	{
 		SquareGrid Grid(MapDimensions.first, MapDimensions.second);
 
+		// TODO: Parse map in a function.
 		for (int Row{0}; Row < Grid.Height; Row++)
 		{
 			for (int Column{0}; Column < Grid.Width; Column++)
 			{
-				const int MapIndex{Row * Grid.Width + Column};
+				const SquareGrid::Location GridLocation{Column, Row};
+				const int MapIndex{Grid.GetMapIndex(GridLocation)};
 				const int MapValue{Map[MapIndex]};
 				const bool IsImpassable{MapValue == 0};
 
@@ -28,10 +30,9 @@ namespace pathfinding
 			}
 		}
 
-		//std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash> CameFrom;
 		const int MapLength{MapDimensions.first * MapDimensions.second};
+
 		std::vector<SquareGrid::Location> CameFrom(MapLength);
-		//std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash> CostSoFar;
 		std::vector<SquareGrid::CostType> CostSoFar(MapLength);
 
 		SquareGrid::Location StartLocation{Start.first, Start.second};
@@ -39,8 +40,12 @@ namespace pathfinding
 
 		AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);
 
-		//const std::vector<SquareGrid::Location> Path{ReconstructPath(StartLocation, GoalLocation, CameFrom)};
-		const std::vector<SquareGrid::Location> Path{ReconstructPath(StartLocation, GoalLocation, CameFrom, MapDimensions)};
+		/*
+		const std::vector<SquareGrid::Location> Path{
+			ReconstructPath(StartLocation, GoalLocation, CameFrom, MapDimensions)
+		};
+		*/
+		const std::vector<SquareGrid::Location> Path{ReconstructPath(Grid, StartLocation, GoalLocation, CameFrom)};
 
 		DrawGrid(Grid, nullptr, &CameFrom, nullptr, &StartLocation, &GoalLocation);
 		std::cout << '\n';
@@ -50,21 +55,22 @@ namespace pathfinding
 
 		DrawGrid(Grid, &CostSoFar, nullptr, nullptr, &StartLocation, &GoalLocation);
 
-		for (auto& location : Path)
+		//for (const SquareGrid::Location GridLocation : Path)
+		for (const SquareGrid::Location GridLocation : Path)
 		{
-			const int map_index{location.Y * Grid.Width + location.X};
+			const int MapIndex{Grid.GetMapIndex(GridLocation)};
 
-			OutPath.push_back(map_index);
+			OutPath.push_back(MapIndex);
 		}
 
-		const bool isValidPath{Path.empty() == false};
+		const bool IsValidPath{!Path.empty()};
 
-		// Do not include start position.
-		if (isValidPath)
+		// Do not include the start position.
+		if (IsValidPath)
 		{
 			OutPath.erase(OutPath.begin());
 		}
 
-		return isValidPath;
+		return IsValidPath;
 	}
 }

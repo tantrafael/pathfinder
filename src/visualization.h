@@ -9,61 +9,55 @@
 
 namespace pathfinding
 {
-	// This function outputs a grid. Pass in optional parameters to print
-	// the distances, point_to directions, or a path.
-	template <class Graph>
-	void DrawGrid(const Graph& graph,
-	              //std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash>* distances = nullptr,
-	              std::vector<SquareGrid::CostType>* distances = nullptr,
-	              //std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
-	              std::vector<SquareGrid::Location>* point_to = nullptr,
-	              const std::vector<SquareGrid::Location>* path = nullptr,
-	              SquareGrid::Location* start = nullptr,
-	              SquareGrid::Location* target = nullptr)
+	template <class TGraph>
+	void DrawGrid(const TGraph& Graph,
+	              std::vector<SquareGrid::CostType>* Costs = nullptr,
+	              std::vector<SquareGrid::Location>* CameFrom = nullptr,
+	              const std::vector<SquareGrid::Location>* Path = nullptr,
+	              SquareGrid::Location* Start = nullptr,
+	              SquareGrid::Location* Goal = nullptr)
 	{
-		const int field_width = 3;
-		std::cout << std::string(field_width * graph.Width, '_') << '\n';
+		const int FieldWidth = 3;
+		std::cout << std::string(FieldWidth * Graph.Width, '_') << '\n';
 
-		for (int y = 0; y != graph.Height; ++y)
+		for (int y = 0; y != Graph.Height; ++y)
 		{
-			for (int x = 0; x != graph.Width; ++x)
+			for (int x = 0; x != Graph.Width; ++x)
 			{
 				SquareGrid::Location id{x, y};
 
-				if (graph.Impassable.find(id) != graph.Impassable.end())
+				if (Graph.Impassable.find(id) != Graph.Impassable.end())
 				{
-					std::cout << std::string(field_width, '#');
+					std::cout << std::string(FieldWidth, '#');
 				}
-				else if (start && id == *start)
+				else if (Start && id == *Start)
 				{
 					std::cout << " A ";
 				}
-				else if (target && id == *target)
+				else if (Goal && id == *Goal)
 				{
 					std::cout << " Z ";
 				}
-				else if (path != nullptr && std::find(path->begin(), path->end(), id) != path->end())
+				else if (Path != nullptr && std::find(Path->begin(), Path->end(), id) != Path->end())
 				{
 					std::cout << " @ ";
 				}
-				//else if (point_to != nullptr && point_to->count(id))
-				else if (point_to != nullptr && std::find(point_to->begin(), point_to->end(), id) != point_to->end())
+				else if (CameFrom != nullptr && std::find(CameFrom->begin(), CameFrom->end(), id) != CameFrom->end())
 				{
-					//SquareGrid::Location next = (*point_to)[id];
-					const int LocationIndex{id.Y * graph.Width + id.X};
-					SquareGrid::Location next = (*point_to)[LocationIndex];
+					const int LocationIndex{id.Y * Graph.Width + id.X};
+					// TODO: Check safety.
+					SquareGrid::Location next = (*CameFrom)[LocationIndex];
 					if (next.X == x + 1) { std::cout << " > "; }
 					else if (next.X == x - 1) { std::cout << " < "; }
 					else if (next.Y == y + 1) { std::cout << " v "; }
 					else if (next.Y == y - 1) { std::cout << " ^ "; }
 					else { std::cout << " * "; }
 				}
-				//else if (distances != nullptr && distances->count(id))
-				else if (distances != nullptr)
+				else if (Costs != nullptr)
 				{
-					//std::cout << ' ' << std::left << std::setw(field_width - 1) << (*distances)[id];
-					const int LocationIndex{id.Y * graph.Width + id.X};
-					std::cout << ' ' << std::left << std::setw(field_width - 1) << (*distances)[LocationIndex];
+					const int LocationIndex{id.Y * Graph.Width + id.X};
+					// TODO: Check safety.
+					std::cout << ' ' << std::left << std::setw(FieldWidth - 1) << (*Costs)[LocationIndex];
 				}
 				else
 				{
@@ -74,6 +68,6 @@ namespace pathfinding
 			std::cout << '\n';
 		}
 
-		std::cout << std::string(field_width * graph.Width, '~') << '\n';
+		std::cout << std::string(FieldWidth * Graph.Width, '~') << '\n';
 	}
 }
