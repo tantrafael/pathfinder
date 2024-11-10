@@ -18,7 +18,11 @@ namespace pathfinding
 		std::vector<Location> Path;
 		Location Current = Goal;
 
-		const bool IsNoPath{std::find(CameFrom.begin(), CameFrom.end(), Current) == CameFrom.end()};
+		const int GoalIndex{Graph.GetMapIndex(Goal)};
+		// TODO: Check safety.
+		//const Location Undefined{0, 0};
+		//const bool IsNoPath{CameFrom[GoalIndex] == Undefined};
+		const bool IsNoPath{CameFrom[GoalIndex] == Location{0, 0}};
 
 		if (IsNoPath)
 		{
