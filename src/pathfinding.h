@@ -55,7 +55,8 @@ namespace pathfinding
 					 const typename TGraph::Location Start,
 					 const typename TGraph::Location Goal,
 					 std::function<typename TGraph::CostType(typename TGraph::Location A, typename TGraph::Location B)> Heuristic,
-					 std::unordered_map<typename TGraph::Location, typename TGraph::Location, SquareGrid::LocationHash>& OutCameFrom,
+					 //std::unordered_map<typename TGraph::Location, typename TGraph::Location, SquareGrid::LocationHash>& OutCameFrom,
+					 std::vector<SquareGrid::Location>& OutCameFrom,
 					 std::unordered_map<typename TGraph::Location, typename TGraph::CostType, SquareGrid::LocationHash>& OutCostSoFar)
 	{
 		typedef typename TGraph::Location Location;
@@ -65,7 +66,10 @@ namespace pathfinding
 		std::vector<Location> Neighbors{};
 
 		Frontier.Add(Start, CostType(0));
-		OutCameFrom[Start] = Start;
+
+		//OutCameFrom[Start] = Start;
+		const int StartIndex{Start.Y * Graph.Width + Start.X};
+		OutCameFrom[StartIndex] = Start;
 		OutCostSoFar[Start] = CostType(0);
 
 		while (!Frontier.IsEmpty())
@@ -93,7 +97,9 @@ namespace pathfinding
 					OutCostSoFar[Neighbor] = Cost;
 					const CostType Priority{Cost + Heuristic(Neighbor, Goal)};
 					Frontier.Add(Neighbor, Priority);
-					OutCameFrom[Neighbor] = Current;
+					//OutCameFrom[Neighbor] = Current;
+					const int NeighborIndex{Neighbor.Y * Graph.Width + Neighbor.X};
+					OutCameFrom[NeighborIndex] = Current;
 				}
 			}
 		}
@@ -102,12 +108,15 @@ namespace pathfinding
 	template <typename TLocation>
 	std::vector<TLocation> ReconstructPath(TLocation Start,
 	                                       TLocation Goal,
-	                                       const std::unordered_map<TLocation, TLocation, SquareGrid::LocationHash>& CameFrom)
+	                                       //const std::unordered_map<TLocation, TLocation, SquareGrid::LocationHash>& CameFrom)
+	                                       const std::vector<TLocation>& CameFrom,
+	                                       std::pair<int, int> MapDimensions)
 	{
 		std::vector<TLocation> Path;
 		TLocation Current = Goal;
 
-		const bool IsNoPath{CameFrom.find(Goal) == CameFrom.end()};
+		//const bool IsNoPath{CameFrom.find(Goal) == CameFrom.end()};
+		const bool IsNoPath{std::find(CameFrom.begin(), CameFrom.end(), Current) != CameFrom.end()};
 		//const bool IsNoPath{!CameFrom.contains(Goal)};
 
 		if (IsNoPath)
@@ -118,7 +127,9 @@ namespace pathfinding
 		while (Current != Start)
 		{
 			Path.push_back(Current);
-			Current = CameFrom.at(Current);
+			//Current = CameFrom.at(Current);
+			const int CurrentIndex{Current.Y * MapDimensions.first + Current.X};
+			Current = CameFrom.at(CurrentIndex);
 		}
 
 		Path.push_back(Start);

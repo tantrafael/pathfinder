@@ -14,7 +14,8 @@ namespace pathfinding
 	template <class Graph>
 	void DrawGrid(const Graph& graph,
 	              std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash>* distances = nullptr,
-	              std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
+	              //std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
+	              std::vector<SquareGrid::Location>* point_to = nullptr,
 	              const std::vector<SquareGrid::Location>* path = nullptr,
 	              SquareGrid::Location* start = nullptr,
 	              SquareGrid::Location* target = nullptr)
@@ -44,9 +45,12 @@ namespace pathfinding
 				{
 					std::cout << " @ ";
 				}
-				else if (point_to != nullptr && point_to->count(id))
+				//else if (point_to != nullptr && point_to->count(id))
+				else if (point_to != nullptr && std::find(point_to->begin(), point_to->end(), id) != point_to->end())
 				{
-					SquareGrid::Location next = (*point_to)[id];
+					//SquareGrid::Location next = (*point_to)[id];
+					const int LocationIndex{id.Y * graph.Width + id.X};
+					SquareGrid::Location next = (*point_to)[LocationIndex];
 					if (next.X == x + 1) { std::cout << " > "; }
 					else if (next.X == x - 1) { std::cout << " < "; }
 					else if (next.Y == y + 1) { std::cout << " v "; }

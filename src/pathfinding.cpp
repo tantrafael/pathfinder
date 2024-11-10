@@ -28,7 +28,9 @@ namespace pathfinding
 			}
 		}
 
-		std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash> CameFrom;
+		//std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash> CameFrom;
+		const int MapLength{MapDimensions.first * MapDimensions.second};
+		std::vector<SquareGrid::Location> CameFrom(MapLength);
 		std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash> CostSoFar;
 
 		SquareGrid::Location StartLocation{Start.first, Start.second};
@@ -36,7 +38,8 @@ namespace pathfinding
 
 		AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);
 
-		const std::vector<SquareGrid::Location> Path{ReconstructPath(StartLocation, GoalLocation, CameFrom)};
+		//const std::vector<SquareGrid::Location> Path{ReconstructPath(StartLocation, GoalLocation, CameFrom)};
+		const std::vector<SquareGrid::Location> Path{ReconstructPath(StartLocation, GoalLocation, CameFrom, MapDimensions)};
 
 		DrawGrid(Grid, nullptr, &CameFrom, nullptr, &StartLocation, &GoalLocation);
 		std::cout << '\n';
