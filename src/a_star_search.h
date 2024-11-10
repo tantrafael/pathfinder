@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <functional>
 #include <vector>
 
@@ -24,7 +25,9 @@ namespace pathfinding
 	                 std::vector<SquareGrid::Location>& OutCameFrom,
 	                 std::vector<typename TGraph::CostType>& OutCostSoFar)
 	{
-		// TODO: Assert correct dimensions of OutCameFrom and OutCostSoFar.
+		const size_t MapLength{static_cast<size_t>(Graph.Width * Graph.Height)};
+		const bool IsValidInput{(OutCameFrom.size() == MapLength) && (OutCostSoFar.size() == MapLength)};
+		assert(IsValidInput);
 
 		typedef typename TGraph::Location Location;
 		typedef typename TGraph::CostType CostType;
@@ -35,9 +38,7 @@ namespace pathfinding
 		Frontier.Add(Start, CostType(0));
 
 		const int StartMapIndex{Graph.GetMapIndex(Start)};
-		// TODO: Check safety.
 		OutCameFrom[StartMapIndex] = Start;
-		// TODO: Check safety.
 		OutCostSoFar[StartMapIndex] = CostType(0);
 
 		while (!Frontier.IsEmpty())
@@ -55,21 +56,16 @@ namespace pathfinding
 			{
 				const int CurrentMapIndex{Graph.GetMapIndex(Current)};
 				const int NeighborMapIndex{Graph.GetMapIndex(Neighbor)};
-				// TODO: Check safety.
 				const CostType Cost{OutCostSoFar[CurrentMapIndex] + Graph.GetCost(Current, Neighbor)};
-				// TODO: Check safety.
 				const bool IsFirstVisit{OutCostSoFar[NeighborMapIndex] == 0};
-				// TODO: Check safety.
 				const bool IsLowerCost{Cost < OutCostSoFar[NeighborMapIndex]};
 				const bool IsCostUpdate{IsFirstVisit || IsLowerCost};
 
 				if (IsCostUpdate)
 				{
-					// TODO: Check safety.
 					OutCostSoFar[NeighborMapIndex] = Cost;
 					const CostType Priority{Cost + Heuristic(Neighbor, Goal)};
 					Frontier.Add(Neighbor, Priority);
-					// TODO: Check safety.
 					OutCameFrom[NeighborMapIndex] = Current;
 				}
 			}

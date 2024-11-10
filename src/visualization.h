@@ -16,6 +16,8 @@ namespace pathfinding
 	              SquareGrid::Location* Start = nullptr,
 	              SquareGrid::Location* Goal = nullptr)
 	{
+		const size_t MapLength{static_cast<size_t>(Graph.Width * Graph.Height)};
+
 		const int FieldWidth{3};
 
 		std::cout << std::string(FieldWidth * Graph.Width, '_') << '\n';
@@ -44,8 +46,10 @@ namespace pathfinding
 				}
 				else if (CameFrom != nullptr && std::find(CameFrom->begin(), CameFrom->end(), GridLocation) != CameFrom->end())
 				{
-					const int LocationIndex{GridLocation.Y * Graph.Width + GridLocation.X};
-					// TODO: Check safety.
+					const bool IsMatchingDimensions{CameFrom->size() == MapLength};
+					assert(IsMatchingDimensions);
+
+					const int LocationIndex{Graph.GetMapIndex(GridLocation)};
 					SquareGrid::Location Next = (*CameFrom)[LocationIndex];
 					if (Next.X == Column + 1) { std::cout << " > "; }
 					else if (Next.X == Column - 1) { std::cout << " < "; }
@@ -55,6 +59,9 @@ namespace pathfinding
 				}
 				else if (Costs != nullptr)
 				{
+					const bool IsMatchingDimensions{Costs->size() == MapLength};
+					assert(IsMatchingDimensions);
+
 					const int LocationIndex{GridLocation.Y * Graph.Width + GridLocation.X};
 					// TODO: Check safety.
 					std::cout << ' ' << std::left << std::setw(FieldWidth - 1) << (*Costs)[LocationIndex];
