@@ -21,8 +21,6 @@ namespace pathfinding
 		Location Current = Goal;
 
 		const int GoalIndex{Graph.GetMapIndex(Goal)};
-		// TODO: Check safety.
-		//const bool IsNoPath{CameFrom[GoalIndex] == Location{0, 0}};
 		const Location UndefinedLocation{0, 0};
 		const bool IsNoPath{CameFrom[GoalIndex] == UndefinedLocation};
 

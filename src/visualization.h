@@ -63,7 +63,6 @@ namespace pathfinding
 					assert(IsMatchingDimensions);
 
 					const int LocationIndex{GridLocation.Y * Graph.Width + GridLocation.X};
-					// TODO: Check safety.
 					std::cout << ' ' << std::left << std::setw(FieldWidth - 1) << (*Costs)[LocationIndex];
 				}
 				else

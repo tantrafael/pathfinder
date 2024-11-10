@@ -42,9 +42,7 @@ int main()
 	};
 	const std::pair<int, int> MapDimensions{30, 15};
 
-
 	std::vector<int> OutPath{};
-
 
 	pathfinding::FindPath(Start, Target, Map, MapDimensions, OutPath);
 }
