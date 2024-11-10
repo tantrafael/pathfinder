@@ -1,5 +1,6 @@
 #include "pathfinding.h"
-
+#include "a_star_search.h"
+#include "path_reconstruction.h"
 #include "visualization.h"
 
 namespace pathfinding
@@ -30,32 +31,25 @@ namespace pathfinding
 			}
 		}
 
-		const int MapLength{MapDimensions.first * MapDimensions.second};
-
-		std::vector<SquareGrid::Location> CameFrom(MapLength);
-		std::vector<SquareGrid::CostType> CostSoFar(MapLength);
-
 		SquareGrid::Location StartLocation{Start.first, Start.second};
 		SquareGrid::Location GoalLocation{Target.first, Target.second};
 
-		AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);
+		const int MapLength{MapDimensions.first * MapDimensions.second};
+		std::vector<SquareGrid::Location> CameFrom(MapLength);
+		std::vector<SquareGrid::CostType> CostSoFar(MapLength);
 
-		/*
-		const std::vector<SquareGrid::Location> Path{
-			ReconstructPath(StartLocation, GoalLocation, CameFrom, MapDimensions)
-		};
-		*/
-		const std::vector<SquareGrid::Location> Path{ReconstructPath(Grid, StartLocation, GoalLocation, CameFrom)};
+		AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);
 
 		DrawGrid(Grid, nullptr, &CameFrom, nullptr, &StartLocation, &GoalLocation);
 		std::cout << '\n';
+
+		const std::vector<SquareGrid::Location> Path{ReconstructPath(Grid, StartLocation, GoalLocation, CameFrom)};
 
 		DrawGrid(Grid, nullptr, nullptr, &Path, &StartLocation, &GoalLocation);
 		std::cout << '\n';
 
 		DrawGrid(Grid, &CostSoFar, nullptr, nullptr, &StartLocation, &GoalLocation);
 
-		//for (const SquareGrid::Location GridLocation : Path)
 		for (const SquareGrid::Location GridLocation : Path)
 		{
 			const int MapIndex{Grid.GetMapIndex(GridLocation)};

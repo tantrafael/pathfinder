@@ -47,9 +47,9 @@ namespace pathfinding
 	{
 		OutNeighbors.clear();
 
-		for (const Location Direction : Directions)
+		for (const Location GridDirection : Directions)
 		{
-			Location AdjacentLocation{GridLocation.X + Direction.X, GridLocation.Y + Direction.Y};
+			Location AdjacentLocation{GridLocation.X + GridDirection.X, GridLocation.Y + GridDirection.Y};
 
 			if (IsWithinBounds(AdjacentLocation) && IsPassable(AdjacentLocation))
 			{

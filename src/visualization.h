@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <unordered_map>
 #include <vector>
 #include <iomanip>
 
@@ -17,45 +16,46 @@ namespace pathfinding
 	              SquareGrid::Location* Start = nullptr,
 	              SquareGrid::Location* Goal = nullptr)
 	{
-		const int FieldWidth = 3;
+		const int FieldWidth{3};
+
 		std::cout << std::string(FieldWidth * Graph.Width, '_') << '\n';
 
-		for (int y = 0; y != Graph.Height; ++y)
+		for (int Row{0}; Row != Graph.Height; Row++)
 		{
-			for (int x = 0; x != Graph.Width; ++x)
+			for (int Column{0}; Column != Graph.Width; Column++)
 			{
-				SquareGrid::Location id{x, y};
+				SquareGrid::Location GridLocation{Column, Row};
 
-				if (Graph.Impassable.find(id) != Graph.Impassable.end())
+				if (Graph.Impassable.find(GridLocation) != Graph.Impassable.end())
 				{
 					std::cout << std::string(FieldWidth, '#');
 				}
-				else if (Start && id == *Start)
+				else if (Start && GridLocation == *Start)
 				{
 					std::cout << " A ";
 				}
-				else if (Goal && id == *Goal)
+				else if (Goal && GridLocation == *Goal)
 				{
 					std::cout << " Z ";
 				}
-				else if (Path != nullptr && std::find(Path->begin(), Path->end(), id) != Path->end())
+				else if (Path != nullptr && std::find(Path->begin(), Path->end(), GridLocation) != Path->end())
 				{
 					std::cout << " @ ";
 				}
-				else if (CameFrom != nullptr && std::find(CameFrom->begin(), CameFrom->end(), id) != CameFrom->end())
+				else if (CameFrom != nullptr && std::find(CameFrom->begin(), CameFrom->end(), GridLocation) != CameFrom->end())
 				{
-					const int LocationIndex{id.Y * Graph.Width + id.X};
+					const int LocationIndex{GridLocation.Y * Graph.Width + GridLocation.X};
 					// TODO: Check safety.
-					SquareGrid::Location next = (*CameFrom)[LocationIndex];
-					if (next.X == x + 1) { std::cout << " > "; }
-					else if (next.X == x - 1) { std::cout << " < "; }
-					else if (next.Y == y + 1) { std::cout << " v "; }
-					else if (next.Y == y - 1) { std::cout << " ^ "; }
+					SquareGrid::Location Next = (*CameFrom)[LocationIndex];
+					if (Next.X == Column + 1) { std::cout << " > "; }
+					else if (Next.X == Column - 1) { std::cout << " < "; }
+					else if (Next.Y == Row + 1) { std::cout << " v "; }
+					else if (Next.Y == Row - 1) { std::cout << " ^ "; }
 					else { std::cout << " * "; }
 				}
 				else if (Costs != nullptr)
 				{
-					const int LocationIndex{id.Y * Graph.Width + id.X};
+					const int LocationIndex{GridLocation.Y * Graph.Width + GridLocation.X};
 					// TODO: Check safety.
 					std::cout << ' ' << std::left << std::setw(FieldWidth - 1) << (*Costs)[LocationIndex];
 				}
