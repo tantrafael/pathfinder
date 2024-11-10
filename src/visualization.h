@@ -13,7 +13,8 @@ namespace pathfinding
 	// the distances, point_to directions, or a path.
 	template <class Graph>
 	void DrawGrid(const Graph& graph,
-	              std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash>* distances = nullptr,
+	              //std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash>* distances = nullptr,
+	              std::vector<SquareGrid::CostType>* distances = nullptr,
 	              //std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash>* point_to = nullptr,
 	              std::vector<SquareGrid::Location>* point_to = nullptr,
 	              const std::vector<SquareGrid::Location>* path = nullptr,
@@ -57,9 +58,12 @@ namespace pathfinding
 					else if (next.Y == y - 1) { std::cout << " ^ "; }
 					else { std::cout << " * "; }
 				}
-				else if (distances != nullptr && distances->count(id))
+				//else if (distances != nullptr && distances->count(id))
+				else if (distances != nullptr)
 				{
-					std::cout << ' ' << std::left << std::setw(field_width - 1) << (*distances)[id];
+					//std::cout << ' ' << std::left << std::setw(field_width - 1) << (*distances)[id];
+					const int LocationIndex{id.Y * graph.Width + id.X};
+					std::cout << ' ' << std::left << std::setw(field_width - 1) << (*distances)[LocationIndex];
 				}
 				else
 				{

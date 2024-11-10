@@ -31,7 +31,8 @@ namespace pathfinding
 		//std::unordered_map<SquareGrid::Location, SquareGrid::Location, SquareGrid::LocationHash> CameFrom;
 		const int MapLength{MapDimensions.first * MapDimensions.second};
 		std::vector<SquareGrid::Location> CameFrom(MapLength);
-		std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash> CostSoFar;
+		//std::unordered_map<SquareGrid::Location, SquareGrid::CostType, SquareGrid::LocationHash> CostSoFar;
+		std::vector<SquareGrid::CostType> CostSoFar(MapLength);
 
 		SquareGrid::Location StartLocation{Start.first, Start.second};
 		SquareGrid::Location GoalLocation{Target.first, Target.second};

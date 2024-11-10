@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+//#include <unordered_map>
 #include <vector>
 #include <queue>
 #include <algorithm>
@@ -57,7 +57,8 @@ namespace pathfinding
 					 std::function<typename TGraph::CostType(typename TGraph::Location A, typename TGraph::Location B)> Heuristic,
 					 //std::unordered_map<typename TGraph::Location, typename TGraph::Location, SquareGrid::LocationHash>& OutCameFrom,
 					 std::vector<SquareGrid::Location>& OutCameFrom,
-					 std::unordered_map<typename TGraph::Location, typename TGraph::CostType, SquareGrid::LocationHash>& OutCostSoFar)
+					 //std::unordered_map<typename TGraph::Location, typename TGraph::CostType, SquareGrid::LocationHash>& OutCostSoFar)
+					 std::vector<typename TGraph::CostType>& OutCostSoFar)
 	{
 		typedef typename TGraph::Location Location;
 		typedef typename TGraph::CostType CostType;
@@ -70,7 +71,8 @@ namespace pathfinding
 		//OutCameFrom[Start] = Start;
 		const int StartIndex{Start.Y * Graph.Width + Start.X};
 		OutCameFrom[StartIndex] = Start;
-		OutCostSoFar[Start] = CostType(0);
+		//OutCostSoFar[Start] = CostType(0);
+		OutCostSoFar[StartIndex] = CostType(0);
 
 		while (!Frontier.IsEmpty())
 		{
@@ -86,19 +88,25 @@ namespace pathfinding
 
 			for (const Location Neighbor : Neighbors)
 			{
-				const CostType Cost{OutCostSoFar[Current] + Graph.GetCost(Current, Neighbor)};
-				const bool IsFirstVisit{OutCostSoFar.find(Neighbor) == OutCostSoFar.end()};
+				//const CostType Cost{OutCostSoFar[Current] + Graph.GetCost(Current, Neighbor)};
+				const int CurrentIndex{Current.Y * Graph.Width + Current.X};
+				const CostType Cost{OutCostSoFar[CurrentIndex] + Graph.GetCost(Current, Neighbor)};
+				//const bool IsFirstVisit{OutCostSoFar.find(Neighbor) == OutCostSoFar.end()};
+				const int NeighborIndex{Neighbor.Y * Graph.Width + Neighbor.X};
+				const bool IsFirstVisit{OutCostSoFar[NeighborIndex] == 0};
 				//const bool IsFirstEncounter{!CostSoFar.contains(Neighbor)};
-				const bool IsLowerCost{Cost < OutCostSoFar[Neighbor]};
+				//const bool IsLowerCost{Cost < OutCostSoFar[Neighbor]};
+				const bool IsLowerCost{Cost < OutCostSoFar[NeighborIndex]};
 				const bool IsCostUpdate{IsFirstVisit || IsLowerCost};
 
 				if (IsCostUpdate)
 				{
-					OutCostSoFar[Neighbor] = Cost;
+					//OutCostSoFar[Neighbor] = Cost;
+					OutCostSoFar[NeighborIndex] = Cost;
 					const CostType Priority{Cost + Heuristic(Neighbor, Goal)};
 					Frontier.Add(Neighbor, Priority);
 					//OutCameFrom[Neighbor] = Current;
-					const int NeighborIndex{Neighbor.Y * Graph.Width + Neighbor.X};
+					//const int NeighborIndex{Neighbor.Y * Graph.Width + Neighbor.X};
 					OutCameFrom[NeighborIndex] = Current;
 				}
 			}
