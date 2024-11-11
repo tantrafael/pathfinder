@@ -4,6 +4,8 @@
 
 namespace pathfinding
 {
+	SquareGrid::Location SquareGrid::Location::Undefined = {-1, -1};
+
 	bool SquareGrid::Location::operator ==(Location Other) const
 	{
 		return (X == Other.X) && (Y == Other.Y);
@@ -57,6 +59,7 @@ namespace pathfinding
 			}
 		}
 
+		// TODO: Investigate why this makes no difference.
 		// Simple way to get fairly good-looking paths.
 		if ((GridLocation.X + GridLocation.Y) % 2 == 0)
 		{

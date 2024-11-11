@@ -12,6 +12,8 @@ namespace pathfinding
 		{
 			int X, Y;
 
+			static Location Undefined;
+
 			bool operator ==(Location Other) const;
 			bool operator !=(Location Other) const;
 			bool operator <(Location Other) const;

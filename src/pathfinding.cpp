@@ -64,8 +64,8 @@ namespace pathfinding
 		SquareGrid::Location GoalLocation{Target.first, Target.second};
 
 		const int MapLength{MapDimensions.first * MapDimensions.second};
-		std::vector<SquareGrid::Location> CameFrom(MapLength);
-		std::vector<SquareGrid::CostType> CostSoFar(MapLength);
+		std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Location::Undefined);
+		std::vector<SquareGrid::CostType> CostSoFar(MapLength, 0);
 
 		AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);
 
@@ -85,24 +85,29 @@ namespace pathfinding
 	}
 
 	void ConstructOutput(const SquareGrid& Grid,
-	                     const std::vector<SquareGrid::Location>& GridPath,
-	                     std::vector<int>& OutPath)
+						 const std::vector<SquareGrid::Location>& GridPath,
+						 std::vector<int>& OutPath)
 	{
 		OutPath.clear();
 
-		for (const SquareGrid::Location GridLocation : GridPath)
-		{
-			const int MapIndex{Grid.GetMapIndex(GridLocation)};
+		const bool IsNoPath{GridPath.empty()};
 
-			OutPath.push_back(MapIndex);
+		if (IsNoPath)
+		{
+			return;
 		}
 
-		const bool IsValidPath{!GridPath.empty()};
+		// Exclude start position from the output.
+		// When start and goal coincide, GridPath holds only that one location.
+		const bool IsCoincidingStartAndGoal{GridPath.size() == 1};
+		const int StartIndex{IsCoincidingStartAndGoal ? 0 : 1};
+		const int GridPathSize{static_cast<int>(GridPath.size())};
 
-		// Do not include the start position.
-		if (IsValidPath)
+		for (int Index{StartIndex}; Index < GridPathSize; Index++)
 		{
-			OutPath.erase(OutPath.begin());
+			const SquareGrid::Location GridLocation{GridPath[Index]};
+			const int MapIndex{Grid.GetMapIndex(GridLocation)};
+			OutPath.push_back(MapIndex);
 		}
 	}
 }
