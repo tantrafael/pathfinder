@@ -96,7 +96,8 @@ namespace pathfinding
 		SquareGrid::Location GoalLocation{Target.first, Target.second};
 
 		const int MapLength{MapDimensions.first * MapDimensions.second};
-		std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Location::Undefined);
+		//std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Location::Undefined);
+		std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Undefined);
 		std::vector<SquareGrid::CostType> CostSoFar(MapLength, 0);
 
 		AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);

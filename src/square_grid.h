@@ -12,12 +12,14 @@ namespace pathfinding
 		{
 			int X, Y;
 
-			static Location Undefined;
+			//static constexpr Location Undefined{-1, -1};
 
 			bool operator ==(Location Other) const;
 			bool operator !=(Location Other) const;
 			bool operator <(Location Other) const;
 		};
+
+		static constexpr Location Undefined{-1, -1};
 
 		struct LocationHash
 		{

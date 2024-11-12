@@ -21,7 +21,8 @@ namespace pathfinding
 		Location Current = Goal;
 
 		const int GoalIndex{Graph.GetMapIndex(Goal)};
-		const bool IsNoPath{CameFrom[GoalIndex] == SquareGrid::Location::Undefined};
+		//const bool IsNoPath{CameFrom[GoalIndex] == SquareGrid::Location::Undefined};
+		const bool IsNoPath{CameFrom[GoalIndex] == SquareGrid::Undefined};
 
 		if (IsNoPath)
 		{
