@@ -38,7 +38,8 @@ namespace pathfinding
 		SquareGrid(int Width, int Height);
 		bool CheckWithinBounds(Location GridLocation) const;
 		bool CheckPassable(Location GridLocation) const;
-		void GetNeighbors(Location GridLocation, std::vector<Location>& OutNeighbors) const;
+		//void GetNeighbors(Location GridLocation, std::vector<Location>& OutNeighbors) const;
+		std::vector<Location> GetNeighbors(Location GridLocation) const;
 		//static CostType GetCost(Location FromLocation, Location ToLocation);
 		static constexpr CostType Cost{1};
 		int GetMapIndex(Location GridLocation) const;

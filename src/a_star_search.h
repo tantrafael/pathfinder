@@ -96,7 +96,7 @@ namespace pathfinding
 		typedef typename TGraph::CostType CostType;
 
 		PriorityQueue<Location, CostType> Frontier{};
-		std::vector<Location> Neighbors{};
+		//std::vector<Location> Neighbors{};
 
 		Frontier.Add(Start, CostType(0));
 
@@ -113,7 +113,8 @@ namespace pathfinding
 				break;
 			}
 
-			Graph.GetNeighbors(Current, Neighbors);
+			//Graph.GetNeighbors(Current, Neighbors);
+			const std::vector<Location> Neighbors{Graph.GetNeighbors(Current)};
 
 			for (const Location Neighbor : Neighbors)
 			{
