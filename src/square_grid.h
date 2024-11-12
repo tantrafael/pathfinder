@@ -31,8 +31,8 @@ namespace pathfinding
 		std::unordered_set<Location, LocationHash> Impassable;
 
 		SquareGrid(int Width, int Height);
-		bool IsWithinBounds(Location GridLocation) const;
-		bool IsPassable(Location GridLocation) const;
+		bool CheckWithinBounds(Location GridLocation) const;
+		bool CheckPassable(Location GridLocation) const;
 		void GetNeighbors(Location GridLocation, std::vector<Location>& OutNeighbors) const;
 		static CostType GetCost(Location FromLocation, Location ToLocation);
 		int GetMapIndex(Location GridLocation) const;

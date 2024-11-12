@@ -35,12 +35,12 @@ namespace pathfinding
 	{
 	}
 
-	bool SquareGrid::IsWithinBounds(Location GridLocation) const
+	bool SquareGrid::CheckWithinBounds(Location GridLocation) const
 	{
 		return (0 <= GridLocation.X) && (GridLocation.X < Width) && (0 <= GridLocation.Y) && (GridLocation.Y < Height);
 	}
 
-	bool SquareGrid::IsPassable(Location GridLocation) const
+	bool SquareGrid::CheckPassable(Location GridLocation) const
 	{
 		return Impassable.find(GridLocation) == Impassable.end();
 	}
@@ -51,9 +51,10 @@ namespace pathfinding
 
 		for (const Location GridDirection : Directions)
 		{
-			Location AdjacentLocation{GridLocation.X + GridDirection.X, GridLocation.Y + GridDirection.Y};
+			const Location AdjacentLocation{GridLocation.X + GridDirection.X, GridLocation.Y + GridDirection.Y};
+			const bool IsValidNeighbor{CheckWithinBounds(AdjacentLocation) && CheckPassable(AdjacentLocation)};
 
-			if (IsWithinBounds(AdjacentLocation) && IsPassable(AdjacentLocation))
+			if (IsValidNeighbor)
 			{
 				OutNeighbors.push_back(AdjacentLocation);
 			}
