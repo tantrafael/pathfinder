@@ -4,15 +4,14 @@
 
 #include "square_grid.h"
 
+bool FindPath(std::pair<int, int> Start,
+              std::pair<int, int> Target,
+              const std::vector<int>& Map,
+              std::pair<int, int> MapDimensions,
+              std::vector<int>& OutPath);
+
 namespace pathfinding
 {
-	// TODO: Move API function out of pathfinding namespace.
-	bool FindPath(std::pair<int, int> Start,
-	              std::pair<int, int> Target,
-	              const std::vector<int>& Map,
-	              std::pair<int, int> MapDimensions,
-	              std::vector<int>& OutPath);
-
 	bool CheckValidInput(std::pair<int, int> Start,
 	                     std::pair<int, int> Target,
 	                     const std::vector<int>& Map,

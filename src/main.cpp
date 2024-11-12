@@ -1,7 +1,6 @@
 #include <vector>
 
 #include "pathfinding.h"
-#include "grid_initialization.h"
 
 int main()
 {
@@ -65,5 +64,6 @@ int main()
 
 	std::vector<int> OutPath{};
 
-	pathfinding::FindPath(Start, Target, Map, MapDimensions, OutPath);
+	//pathfinding::FindPath(Start, Target, Map, MapDimensions, OutPath);
+	FindPath(Start, Target, Map, MapDimensions, OutPath);
 }

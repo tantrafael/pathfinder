@@ -6,39 +6,39 @@
 #include "path_reconstruction.h"
 #include "visualization.h"
 
-namespace pathfinding
+bool FindPath(std::pair<int, int> Start,
+              std::pair<int, int> Target,
+              const std::vector<int>& Map,
+              std::pair<int, int> MapDimensions,
+              std::vector<int>& OutPath)
 {
-	bool FindPath(std::pair<int, int> Start,
-	              std::pair<int, int> Target,
-	              const std::vector<int>& Map,
-	              std::pair<int, int> MapDimensions,
-	              std::vector<int>& OutPath)
+	const bool IsValidInput{pathfinding::CheckValidInput(Start, Target, Map, MapDimensions, OutPath)};
+
+	if (!IsValidInput)
 	{
-		const bool IsValidInput{CheckValidInput(Start, Target, Map, MapDimensions, OutPath)};
+		OutPath.clear();
 
-		if (!IsValidInput)
-		{
-			OutPath.clear();
-
-			return false;
-		}
-
-		SquareGrid Grid(MapDimensions.first, MapDimensions.second);
-
-		ParseMap(Map, Grid);
-
-		const std::vector<SquareGrid::Location> GridPath{
-			FindGridPath(Start, Target, MapDimensions, Grid)
-		};
-
-		ConstructOutput(Grid, GridPath, OutPath);
-
-		const bool IsValidPath{!OutPath.empty()};
-
-		return IsValidPath;
+		return false;
 	}
 
-	bool CheckValidInput(std::pair<int, int> Start,
+	pathfinding::SquareGrid Grid(MapDimensions.first, MapDimensions.second);
+
+	pathfinding::ParseMap(Map, Grid);
+
+	const std::vector<pathfinding::SquareGrid::Location> GridPath{
+		FindGridPath(Start, Target, MapDimensions, Grid)
+	};
+
+	ConstructOutput(Grid, GridPath, OutPath);
+
+	const bool IsValidPath{!OutPath.empty()};
+
+	return IsValidPath;
+}
+
+namespace pathfinding
+	{
+		bool CheckValidInput(std::pair<int, int> Start,
 	                     std::pair<int, int> Target,
 	                     const std::vector<int>& Map,
 	                     std::pair<int, int> MapDimensions,

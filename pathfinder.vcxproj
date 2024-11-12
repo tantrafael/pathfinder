@@ -19,14 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\grid_initialization.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pathfinding.cpp" />
     <ClCompile Include="src\square_grid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\a_star_search.h" />
-    <ClInclude Include="src\grid_initialization.h" />
     <ClInclude Include="src\pathfinding.h" />
     <ClInclude Include="src\path_reconstruction.h" />
     <ClInclude Include="src\priority_queue.h" />
