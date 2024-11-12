@@ -13,8 +13,8 @@ namespace pathfinding
 	              std::vector<SquareGrid::CostType>* Costs = nullptr,
 	              std::vector<SquareGrid::Location>* CameFrom = nullptr,
 	              const std::vector<SquareGrid::Location>* Path = nullptr,
-	              SquareGrid::Location* Start = nullptr,
-	              SquareGrid::Location* Goal = nullptr)
+	              const SquareGrid::Location* Start = nullptr,
+	              const SquareGrid::Location* Goal = nullptr)
 	{
 		const size_t MapLength{static_cast<size_t>(Graph.Width * Graph.Height)};
 

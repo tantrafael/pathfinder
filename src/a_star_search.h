@@ -17,6 +17,7 @@ namespace pathfinding
 		return ManhattanDistance;
 	}
 
+	/*
 	template <typename TGraph>
 	void AStarSearch(const TGraph& Graph,
 	                 const typename TGraph::Location Start,
@@ -57,7 +58,8 @@ namespace pathfinding
 			{
 				const int CurrentMapIndex{Graph.GetMapIndex(Current)};
 				const int NeighborMapIndex{Graph.GetMapIndex(Neighbor)};
-				const CostType Cost{OutCostSoFar[CurrentMapIndex] + Graph.GetCost(Current, Neighbor)};
+				//const CostType Cost{OutCostSoFar[CurrentMapIndex] + Graph.GetCost(Current, Neighbor)};
+				const CostType Cost{OutCostSoFar[CurrentMapIndex] + Graph.Cost};
 				const bool IsFirstVisit{OutCostSoFar[NeighborMapIndex] == 0};
 				const bool IsLowerCost{Cost < OutCostSoFar[NeighborMapIndex]};
 				const bool IsCostUpdate{IsFirstVisit || IsLowerCost};
@@ -71,5 +73,68 @@ namespace pathfinding
 				}
 			}
 		}
+	}
+	*/
+	struct AStarSearchOutput
+	{
+		std::vector<SquareGrid::Location> CameFrom;
+		std::vector<SquareGrid::CostType> CostSoFar;
+	};
+
+	template <typename TGraph>
+	AStarSearchOutput AStarSearch(const TGraph& Graph,
+	                              const typename TGraph::Location Start,
+	                              const typename TGraph::Location Goal,
+	                              std::function<typename TGraph::CostType(typename TGraph::Location Location,
+	                                                                      typename TGraph::Location Goal)> Heuristic)
+	{
+		const int MapLength{Graph.Width * Graph.Height};
+		std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Undefined);
+		std::vector<SquareGrid::CostType> CostSoFar(MapLength, 0);
+
+		typedef typename TGraph::Location Location;
+		typedef typename TGraph::CostType CostType;
+
+		PriorityQueue<Location, CostType> Frontier{};
+		std::vector<Location> Neighbors{};
+
+		Frontier.Add(Start, CostType(0));
+
+		const int StartMapIndex{Graph.GetMapIndex(Start)};
+		CameFrom[StartMapIndex] = Start;
+		CostSoFar[StartMapIndex] = CostType(0);
+
+		while (!Frontier.IsEmpty())
+		{
+			const Location Current{Frontier.Get()};
+
+			if (Current == Goal)
+			{
+				break;
+			}
+
+			Graph.GetNeighbors(Current, Neighbors);
+
+			for (const Location Neighbor : Neighbors)
+			{
+				const int CurrentMapIndex{Graph.GetMapIndex(Current)};
+				const int NeighborMapIndex{Graph.GetMapIndex(Neighbor)};
+				//const CostType Cost{OutCostSoFar[CurrentMapIndex] + Graph.GetCost(Current, Neighbor)};
+				const CostType Cost{CostSoFar[CurrentMapIndex] + Graph.Cost};
+				const bool IsFirstVisit{CostSoFar[NeighborMapIndex] == 0};
+				const bool IsLowerCost{Cost < CostSoFar[NeighborMapIndex]};
+				const bool IsCostUpdate{IsFirstVisit || IsLowerCost};
+
+				if (IsCostUpdate)
+				{
+					CostSoFar[NeighborMapIndex] = Cost;
+					const CostType Priority{Cost + Heuristic(Neighbor, Goal)};
+					Frontier.Add(Neighbor, Priority);
+					CameFrom[NeighborMapIndex] = Current;
+				}
+			}
+		}
+
+		return AStarSearchOutput{CameFrom, CostSoFar};
 	}
 }

@@ -28,7 +28,10 @@ namespace pathfinding
 
 		typedef int CostType;
 
-		static std::array<Location, 4> Directions;
+		//static std::array<Location, 4> Directions;
+		static constexpr std::array<Location, 4> Directions{
+			Location{1, 0}, Location{-1, 0}, Location{0, -1}, Location{0, 1}
+		};
 		int Width, Height;
 		std::unordered_set<Location, LocationHash> Impassable;
 
@@ -36,7 +39,8 @@ namespace pathfinding
 		bool CheckWithinBounds(Location GridLocation) const;
 		bool CheckPassable(Location GridLocation) const;
 		void GetNeighbors(Location GridLocation, std::vector<Location>& OutNeighbors) const;
-		static CostType GetCost(Location FromLocation, Location ToLocation);
+		//static CostType GetCost(Location FromLocation, Location ToLocation);
+		static constexpr CostType Cost{1};
 		int GetMapIndex(Location GridLocation) const;
 	};
 }
