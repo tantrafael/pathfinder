@@ -13,6 +13,12 @@ namespace pathfinding
 	              std::pair<int, int> MapDimensions,
 	              std::vector<int>& OutPath);
 
+	bool CheckValidInput(std::pair<int, int> Start,
+	                     std::pair<int, int> Target,
+	                     const std::vector<int>& Map,
+	                     std::pair<int, int> MapDimensions,
+	                     const std::vector<int>& OutPath);
+
 	void ParseMap(const std::vector<int>& Map, SquareGrid& OutGrid);
 
 	std::vector<SquareGrid::Location> FindGridPath(std::pair<int, int> Start,

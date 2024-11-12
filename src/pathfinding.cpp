@@ -14,17 +14,12 @@ namespace pathfinding
 	              std::pair<int, int> MapDimensions,
 	              std::vector<int>& OutPath)
 	{
-		const bool IsValidMapDimensions{(MapDimensions.first >= 1) && (MapDimensions.second >= 1)};
-		const bool IsValidStart{(0 <= Start.first) && (Start.first < MapDimensions.first)
-		                        && (0 <= Start.second) && (Start.second < MapDimensions.second)};
-		const bool IsValidTarget{(0 <= Target.first) && (Target.first < MapDimensions.first)
-		                         && (0 <= Target.second) && (Target.second < MapDimensions.second)};
-		const bool IsMatchingMapDimensions{MapDimensions.first * MapDimensions.second == static_cast<int>(Map.size())};
-		const bool IsValidInput{IsValidMapDimensions && IsValidStart && IsValidTarget && IsMatchingMapDimensions};
+		const bool IsValidInput{CheckValidInput(Start, Target, Map, MapDimensions, OutPath)};
 
 		if (!IsValidInput)
 		{
 			OutPath.clear();
+
 			return false;
 		}
 
@@ -41,6 +36,31 @@ namespace pathfinding
 		const bool IsValidPath{!OutPath.empty()};
 
 		return IsValidPath;
+	}
+
+	bool CheckValidInput(std::pair<int, int> Start,
+	                     std::pair<int, int> Target,
+	                     const std::vector<int>& Map,
+	                     std::pair<int, int> MapDimensions,
+	                     const std::vector<int>& OutPath)
+	{
+		const bool IsValidMapDimensions{(MapDimensions.first >= 1) && (MapDimensions.second >= 1)};
+
+		const bool IsValidStart{(0 <= Start.first) && (Start.first < MapDimensions.first)
+		                        && (0 <= Start.second) && (Start.second < MapDimensions.second)};
+
+		const bool IsValidTarget{(0 <= Target.first) && (Target.first < MapDimensions.first)
+		                         && (0 <= Target.second) && (Target.second < MapDimensions.second)};
+
+		const bool IsMatchingMapDimensions{MapDimensions.first * MapDimensions.second == static_cast<int>(Map.size())};
+
+		const bool IsValidPath{OutPath.empty()};
+
+		const bool IsValidInput{
+			IsValidMapDimensions && IsValidStart && IsValidTarget && IsMatchingMapDimensions && IsValidPath
+		};
+
+		return IsValidInput;
 	}
 
 	void ParseMap(const std::vector<int>& Map, SquareGrid& OutGrid)
@@ -97,8 +117,8 @@ namespace pathfinding
 	}
 
 	void ConstructOutput(const SquareGrid& Grid,
-						 const std::vector<SquareGrid::Location>& GridPath,
-						 std::vector<int>& OutPath)
+	                     const std::vector<SquareGrid::Location>& GridPath,
+	                     std::vector<int>& OutPath)
 	{
 		OutPath.clear();
 
