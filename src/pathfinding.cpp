@@ -14,7 +14,19 @@ namespace pathfinding
 	              std::pair<int, int> MapDimensions,
 	              std::vector<int>& OutPath)
 	{
-		// TODO: Assert valid input.
+		const bool IsValidMapDimensions{(MapDimensions.first >= 1) && (MapDimensions.second >= 1)};
+		const bool IsValidStart{(0 <= Start.first) && (Start.first < MapDimensions.first)
+		                        && (0 <= Start.second) && (Start.second < MapDimensions.second)};
+		const bool IsValidTarget{(0 <= Target.first) && (Target.first < MapDimensions.first)
+		                         && (0 <= Target.second) && (Target.second < MapDimensions.second)};
+		const bool IsMatchingMapDimensions{MapDimensions.first * MapDimensions.second == static_cast<int>(Map.size())};
+		const bool IsValidInput{IsValidMapDimensions && IsValidStart && IsValidTarget && IsMatchingMapDimensions};
+
+		if (!IsValidInput)
+		{
+			OutPath.clear();
+			return false;
+		}
 
 		SquareGrid Grid(MapDimensions.first, MapDimensions.second);
 
