@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <functional>
+#include <cmath>
 #include <vector>
 
 #include "priority_queue.h"
