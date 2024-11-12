@@ -4,8 +4,6 @@
 
 namespace pathfinding
 {
-	SquareGrid::Location SquareGrid::Location::Undefined = {-1, -1};
-
 	bool SquareGrid::Location::operator ==(Location Other) const
 	{
 		return (X == Other.X) && (Y == Other.Y);
