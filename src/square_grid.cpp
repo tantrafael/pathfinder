@@ -24,10 +24,12 @@ namespace pathfinding
 		return std::hash<int>()(GridLocation.X ^ (GridLocation.Y << 16));
 	}
 
+	/*
 	std::array<SquareGrid::Location, 4> SquareGrid::Directions = {
 		Location{1, 0}, Location{-1, 0},
 		Location{0, -1}, Location{0, 1}
 	};
+	*/
 
 	SquareGrid::SquareGrid(int Width, int Height) : Width(Width), Height(Height)
 	{
@@ -66,10 +68,12 @@ namespace pathfinding
 		}
 	}
 
+	/*
 	SquareGrid::CostType SquareGrid::GetCost(Location FromLocation, Location ToLocation)
 	{
 		return 1;
 	}
+	*/
 
 	int SquareGrid::GetMapIndex(Location GridLocation) const
 	{

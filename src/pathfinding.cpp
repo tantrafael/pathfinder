@@ -6,6 +6,7 @@
 #include "path_reconstruction.h"
 #include "visualization.h"
 
+/*
 bool FindPath(std::pair<int, int> Start,
               std::pair<int, int> Target,
               const std::vector<int>& Map,
@@ -30,6 +31,45 @@ bool FindPath(std::pair<int, int> Start,
 	};
 
 	ConstructOutput(Grid, GridPath, OutPath);
+
+	const bool IsValidPath{!OutPath.empty()};
+
+	return IsValidPath;
+}
+*/
+bool FindPath(std::pair<int, int> Start,
+			  std::pair<int, int> Target,
+			  const std::vector<int>& Map,
+			  std::pair<int, int> MapDimensions,
+			  std::vector<int>& OutPath)
+{
+	const bool IsValidInput{pathfinding::CheckValidInput(Start, Target, Map, MapDimensions, OutPath)};
+
+	if (!IsValidInput)
+	{
+		OutPath.clear();
+
+		return false;
+	}
+
+	//pathfinding::SquareGrid Grid(MapDimensions.first, MapDimensions.second);
+
+	//pathfinding::ParseMap(Map, Grid);
+	pathfinding::SquareGrid Grid{pathfinding::ParseMap(Map, MapDimensions)};
+
+	/*
+	const std::vector<pathfinding::SquareGrid::Location> GridPath{
+		FindGridPath(Start, Target, MapDimensions, Grid)
+	};
+	*/
+	const std::vector<pathfinding::SquareGrid::Location> GridPath{FindGridPath(Start, Target, Grid)};
+
+	//ConstructOutput(Grid, GridPath, OutPath);
+	//const std::vector<int> MapPath{ConstructOutput(Grid, GridPath)};
+
+	//OutPath = MapPath;
+
+	OutPath = ConstructOutput(Grid, GridPath);
 
 	const bool IsValidPath{!OutPath.empty()};
 
@@ -63,6 +103,7 @@ namespace pathfinding
 		return IsValidInput;
 	}
 
+	/*
 	void ParseMap(const std::vector<int>& Map, SquareGrid& OutGrid)
 	{
 		const size_t MapLength{static_cast<size_t>(OutGrid.Width * OutGrid.Height)};
@@ -86,7 +127,36 @@ namespace pathfinding
 			}
 		}
 	}
+	*/
+	SquareGrid ParseMap(const std::vector<int>& Map, std::pair<int, int> MapDimensions)
+	{
+		SquareGrid Grid(MapDimensions.first, MapDimensions.second);
 
+		const size_t MapLength{static_cast<size_t>(Grid.Width * Grid.Height)};
+		const bool IsMatchingDimensions{Map.size() == MapLength};
+		assert(IsMatchingDimensions);
+
+		for (int Row{0}; Row < Grid.Height; Row++)
+		{
+			for (int Column{0}; Column < Grid.Width; Column++)
+			{
+				const SquareGrid::Location GridLocation{Column, Row};
+				const int MapIndex{Grid.GetMapIndex(GridLocation)};
+				const int MapValue{Map[MapIndex]};
+				const bool IsImpassable{MapValue == 0};
+
+				if (IsImpassable)
+				{
+					const SquareGrid::Location Location{Column, Row};
+					Grid.Impassable.insert(Location);
+				}
+			}
+		}
+
+		return Grid;
+	}
+
+	/*
 	std::vector<SquareGrid::Location> FindGridPath(std::pair<int, int> Start,
 	                                               std::pair<int, int> Target,
 	                                               std::pair<int, int> MapDimensions,
@@ -116,7 +186,42 @@ namespace pathfinding
 
 		return GridPath;
 	}
+	*/
+	std::vector<SquareGrid::Location> FindGridPath(std::pair<int, int> Start,
+	                                               std::pair<int, int> Target,
+	//                                             std::pair<int, int> MapDimensions,
+	                                               const SquareGrid& Grid)
+	{
+		const SquareGrid::Location StartLocation{Start.first, Start.second};
+		const SquareGrid::Location GoalLocation{Target.first, Target.second};
 
+		//const int MapLength{MapDimensions.first * MapDimensions.second};
+		//std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Location::Undefined);
+		//std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Undefined);
+		//std::vector<SquareGrid::CostType> CostSoFar(MapLength, 0);
+
+		//AStarSearch(Grid, StartLocation, GoalLocation, Heuristic, CameFrom, CostSoFar);
+		AStarSearchOutput AStarSearchOutput{AStarSearch(Grid, StartLocation, GoalLocation, Heuristic)};
+
+		const std::vector<SquareGrid::Location> GridPath{
+			//ReconstructPath(Grid, StartLocation, GoalLocation, CameFrom)
+			ReconstructPath(Grid, StartLocation, GoalLocation, AStarSearchOutput.CameFrom)
+		};
+
+		//DrawGrid(Grid, nullptr, &CameFrom, nullptr, &StartLocation, &GoalLocation);
+		DrawGrid(Grid, nullptr, &AStarSearchOutput.CameFrom, nullptr, &StartLocation, &GoalLocation);
+		std::cout << '\n';
+
+		DrawGrid(Grid, nullptr, nullptr, &GridPath, &StartLocation, &GoalLocation);
+		std::cout << '\n';
+
+		//DrawGrid(Grid, &CostSoFar, nullptr, nullptr, &StartLocation, &GoalLocation);
+		DrawGrid(Grid, &AStarSearchOutput.CostSoFar, nullptr, nullptr, &StartLocation, &GoalLocation);
+
+		return GridPath;
+	}
+
+	/*
 	void ConstructOutput(const SquareGrid& Grid,
 	                     const std::vector<SquareGrid::Location>& GridPath,
 	                     std::vector<int>& OutPath)
@@ -142,5 +247,35 @@ namespace pathfinding
 			const int MapIndex{Grid.GetMapIndex(GridLocation)};
 			OutPath.push_back(MapIndex);
 		}
+	}
+	*/
+	std::vector<int> ConstructOutput(const SquareGrid& Grid, const std::vector<SquareGrid::Location>& GridPath)
+	{
+		//OutPath.clear();
+		std::vector<int> MapPath{};
+
+		const bool IsNoPath{GridPath.empty()};
+
+		if (IsNoPath)
+		{
+			//return;
+			return MapPath;
+		}
+
+		// Exclude start position from the output.
+		// When start and goal coincide, GridPath holds only that one location.
+		const bool IsCoincidingStartAndGoal{GridPath.size() == 1};
+		const int StartIndex{IsCoincidingStartAndGoal ? 0 : 1};
+		const int GridPathSize{static_cast<int>(GridPath.size())};
+
+		for (int Index{StartIndex}; Index < GridPathSize; Index++)
+		{
+			const SquareGrid::Location GridLocation{GridPath[Index]};
+			const int MapIndex{Grid.GetMapIndex(GridLocation)};
+			//OutPath.push_back(MapIndex);
+			MapPath.push_back(MapIndex);
+		}
+
+		return MapPath;
 	}
 }
