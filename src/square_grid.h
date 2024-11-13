@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <mutex>
 #include <unordered_set>
 #include <vector>
 
@@ -36,5 +37,8 @@ namespace pathfinding
 		void GetNeighbors(Location GridLocation, std::vector<Location>& OutNeighbors) const;
 		static CostType GetCost(Location FromLocation, Location ToLocation);
 		int GetMapIndex(Location GridLocation) const;
+
+	//private:
+		mutable std::mutex ImpassableMutex;
 	};
 }

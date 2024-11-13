@@ -42,6 +42,7 @@ namespace pathfinding
 
 	bool SquareGrid::CheckPassable(Location GridLocation) const
 	{
+		std::lock_guard<std::mutex> lock(ImpassableMutex);
 		return Impassable.find(GridLocation) == Impassable.end();
 	}
 
