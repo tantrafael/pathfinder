@@ -37,12 +37,12 @@ bool FindPath(std::pair<int, int> Start,
 }
 
 namespace pathfinding
-	{
-		bool CheckValidInput(std::pair<int, int> Start,
+{
+	bool CheckValidInput(std::pair<int, int> Start,
 	                     std::pair<int, int> Target,
 	                     const std::vector<int>& Map,
 	                     std::pair<int, int> MapDimensions,
-	                     const std::vector<int>& OutPath)
+	                     const std::vector<int>& MapPath)
 	{
 		const bool IsValidMapDimensions{(MapDimensions.first >= 1) && (MapDimensions.second >= 1)};
 
@@ -54,7 +54,7 @@ namespace pathfinding
 
 		const bool IsMatchingMapDimensions{MapDimensions.first * MapDimensions.second == static_cast<int>(Map.size())};
 
-		const bool IsValidPath{OutPath.empty()};
+		const bool IsValidPath{MapPath.empty()};
 
 		const bool IsValidInput{
 			IsValidMapDimensions && IsValidStart && IsValidTarget && IsMatchingMapDimensions && IsValidPath
@@ -92,8 +92,8 @@ namespace pathfinding
 	                                               std::pair<int, int> MapDimensions,
 	                                               const SquareGrid& Grid)
 	{
-		SquareGrid::Location StartLocation{Start.first, Start.second};
-		SquareGrid::Location GoalLocation{Target.first, Target.second};
+		const SquareGrid::Location StartLocation{Start.first, Start.second};
+		const SquareGrid::Location GoalLocation{Target.first, Target.second};
 
 		const int MapLength{MapDimensions.first * MapDimensions.second};
 		std::vector<SquareGrid::Location> CameFrom(MapLength, SquareGrid::Location::Undefined);

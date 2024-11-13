@@ -16,7 +16,7 @@ namespace pathfinding
 	                     std::pair<int, int> Target,
 	                     const std::vector<int>& Map,
 	                     std::pair<int, int> MapDimensions,
-	                     const std::vector<int>& OutPath);
+	                     const std::vector<int>& MapPath);
 
 	void ParseMap(const std::vector<int>& Map, SquareGrid& OutGrid);
 
