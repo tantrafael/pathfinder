@@ -1,7 +1,6 @@
 #pragma once
 
 #include <queue>
-#include <mutex>
 
 namespace pathfinding
 {
@@ -17,22 +16,17 @@ namespace pathfinding
 			return Elements.empty();
 		}
 
-		void Add(TLocation Item, TPriority Priority)
+		void Add(TLocation item, TPriority priority)
 		{
-			std::lock_guard<std::mutex> lock(QueueMutex);
-			Elements.emplace(Priority, Item);
+			Elements.emplace(priority, item);
 		}
 
 		TLocation Get()
 		{
-			std::lock_guard<std::mutex> lock(QueueMutex);
 			const TLocation TopElement{Elements.top().second};
 			Elements.pop();
 
 			return TopElement;
 		}
-
-	private:
-		mutable std::mutex QueueMutex;
 	};
 }
