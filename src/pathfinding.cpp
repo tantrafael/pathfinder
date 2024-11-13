@@ -121,6 +121,7 @@ namespace pathfinding
 
 				if (IsImpassable)
 				{
+					std::lock_guard<std::mutex> lock(OutGrid.ImpassableMutex);
 					const SquareGrid::Location Location{Column, Row};
 					OutGrid.Impassable.insert(Location);
 				}
