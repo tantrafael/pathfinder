@@ -16,9 +16,9 @@ namespace pathfinding
 			return Elements.empty();
 		}
 
-		void Add(TLocation item, TPriority priority)
+		void Add(TLocation Item, TPriority Priority)
 		{
-			Elements.emplace(priority, item);
+			Elements.emplace(Priority, Item);
 		}
 
 		TLocation Get()
