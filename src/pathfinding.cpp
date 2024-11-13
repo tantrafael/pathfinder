@@ -1,6 +1,7 @@
 #include "pathfinding.h"
 
 #include <cassert>
+//#include <mutex>
 
 #include "a_star_search.h"
 #include "path_reconstruction.h"
@@ -131,6 +132,7 @@ namespace pathfinding
 	SquareGrid ParseMap(const std::vector<int>& Map, std::pair<int, int> MapDimensions)
 	{
 		SquareGrid Grid(MapDimensions.first, MapDimensions.second);
+		//SquareGrid Grid{MapDimensions.first, MapDimensions.second};
 
 		const size_t MapLength{static_cast<size_t>(Grid.Width * Grid.Height)};
 		const bool IsMatchingDimensions{Map.size() == MapLength};
@@ -147,6 +149,7 @@ namespace pathfinding
 
 				if (IsImpassable)
 				{
+					//std::lock_guard<std::mutex> lock(Grid.ImpassableMutex);
 					const SquareGrid::Location Location{Column, Row};
 					Grid.Impassable.insert(Location);
 				}

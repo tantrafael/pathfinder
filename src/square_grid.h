@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+//#include <mutex>
 #include <unordered_set>
 #include <vector>
 
@@ -43,5 +44,11 @@ namespace pathfinding
 		//static CostType GetCost(Location FromLocation, Location ToLocation);
 		static constexpr CostType Cost{1};
 		int GetMapIndex(Location GridLocation) const;
+
+	/*
+	private:
+		mutable std::mutex ImpassableMutex;
+		friend SquareGrid ParseMap(const std::vector<int>& Map, std::pair<int, int> MapDimensions);
+	*/
 	};
 }
